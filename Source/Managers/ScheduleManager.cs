@@ -2,6 +2,7 @@
 using System.Linq;
 using RimWorld;
 using Verse;
+using Verse.AI;
 using Verse.Noise;
 
 namespace BetterPawnControl
@@ -267,8 +268,15 @@ namespace BetterPawnControl
                     }
                 }
 
-                if (tick)
-                    p.Tick();
+                if (tick && BetterPawnControlMod.Settings.automaticPawnsInterrupt &&
+                    p.jobs?.curJob != null &&
+                    p.jobs.IsCurrentJobPlayerInterruptible() &&
+                    !p.Downed &&
+                    !p.InMentalState &&
+                    !p.Drafted)
+                {
+                    p.jobs.EndCurrentJob(JobCondition.InterruptForced);
+                }
             }
 
             ScheduleManager.SetActivePolicy(policy);

@@ -1,39 +1,94 @@
-﻿# Better Pawn Control 
+# Better Pawn Control Forked
 
-A mod for [Rimworld](https://rimworldgame.com/) available on steam [here](https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369)
+Better Pawn Control Forked is a RimWorld quality-of-life mod for switching colony policies in bulk. It lets you save and swap policy presets for colonists, animals, mechs, work, schedules, assignments, and supported weapon or loadout integrations.
 
-Bulk assignment of colonists and animals to outfits, areas, drugs, food, work in one single action.
+This fork focuses on RimWorld 1.6 compatibility and safer interaction with other pawn-control and gear-management mods.
 
-Allows to set a default outfit, food, drug when a colonist, prisoner or slave joins the colony. 
+## Features
 
-Emergency' button to toggle the configured policies at once in one click or keyboard shorcut. 
+- **Policy presets** for outfits, food, drugs, reading, medicine, hostility response, and optional medicine inventory stock.
+- **Schedule presets** including area restrictions.
+- **Work presets** with optional Work Tab inner-priority support.
+- **Animal, mech, robot, and loadout presets** for supported integrations.
+- **Default policies** for new colonists, prisoners, and slaves.
+- **Emergency toggle** for quickly applying configured policy sets.
+- **Integration-aware apparel handling** for Outfit Stands Plus Forked.
+- **Compatibility checks** that avoid interrupting Defensive Positions Forked gear and movement flows.
 
-## How to use
-1. Create a policy either for animals or for colonists by clicking the cog icon
-2. Select and activate a new created policy by clicking on the button next to the cog icon
-3. Configure the policy by setting the areas, outfits, drugs, etc as you always do
-4. Done.
+## Installation
 
-Repeat this process for other policies and THEN change between them in one click. WIN!
-You can also setup a default outfit, food and drug when a new colonist joins your colony</content>
+### Steam Workshop
 
-## Notes
+Subscribe on Steam Workshop and enable **Harmony** and **Better Pawn Control Forked** in RimWorld's mod list.
 
-This mod was first released on Rimword Alpha 15 and is essencially a quality of life (QoL) mod to minimise pawns micro-management. 
+### Manual Installation
+
+1. Download or clone the repository.
+2. Place the mod folder in your RimWorld `Mods` directory.
+3. Enable **Harmony** and **Better Pawn Control Forked**.
+
+## Usage
+
+1. Open the relevant RimWorld tab, such as Assign, Schedule, Work, Animals, Mechs, or Weapons.
+2. Click the BPC cog button to create or manage policies.
+3. Select a policy from the BPC policy button.
+4. Configure the normal RimWorld policy controls while that BPC policy is active.
+5. Switch between BPC policies when you want those saved settings reapplied.
+
+## Configuration
+
+Configuration is stored in RimWorld's normal mod settings and the in-game policy editors.
+
+Key settings and supported behaviors include:
+
+- default policies for new pawns
+- emergency policy switching
+- optional Work Tab integration
+- optional animal, mech, robot, and loadout integrations
+- Outfit Stands Plus Forked apparel policy triggering
+
+## Building from Source
+
+Prerequisites:
+
+- .NET SDK compatible with the project
+- RimWorld reference files configured for the project
+
+Build the 1.6 assembly from the repository root:
+
+```powershell
+dotnet build .\Source\BetterPawnControl.csproj -c Release /p:UseSharedCompilation=false
+```
+
+The compiled DLL is copied manually into `v1.6/Assemblies/BetterPawnControl.dll` when preparing a local mod package.
+
+## Testing and Validation
+
+The primary validation command is the Release build:
+
+```powershell
+dotnet build .\Source\BetterPawnControl.csproj -c Release /p:UseSharedCompilation=false
+```
+
+## Contributing & Forking Policy
+
+> Contributions, issues, and feature requests are welcome.
+>
+> **Forking Policy:** If your fork primarily consists of bug fixes or feature additions that align with the core vision of this project, I reserve the right to request that your changes be submitted as a Pull Request to this existing codebase rather than being published as a completely separate standalone release, package, listing, or distribution.
+
+## Links
+
+- **Steam Workshop:** <http://steamcommunity.com/sharedfiles/filedetails/?id=1316142788>
+
+## License
+
+> This project is a fork of **Better Pawn Control** and inherits the original project's license. See the original project for license terms: <https://github.com/voult2/BetterPawnControl>.
 
 ## Credits
-- Fluffy for all the help with Animal Tab integration!
-- Skyarkhangel for all the support with Combat Realism integration. Kudos for you!
-- Marnador for the logo [font](https://ludeon.com/forums/index.php?topic=11022.0)
-- Lauri7x3 for german translation
-- Coldmoon for korean translation
-- debugzxcv for the patches optimisation
-- boundir for french translation
-- Proxyer for japanese translation
-- 53N4 and Crusader for spanish translation
-- Dango998 for chinese simplified translation
-- muggenhor for AutoCleaner integration
-- Deno226 for v2.4 contributions and polish translation
-- TheLonerD for WorkTab inner priorities integation + Misc. Robots integration
-- Ionfrigate for french and chinese updated and 1.5 updates
-- DomB for integrated medical UI buttons & Ideology compatibility fixes
+
+- VouLT for Better Pawn Control.
+- Fluffy for Animal Tab integration help.
+- Skyarkhangel for Combat Realism integration support.
+- Marnador for the logo font.
+- Lauri7x3, Coldmoon, boundir, Proxyer, 53N4, Crusader, Deno226, Ionfrigate, and others for translations and updates.
+- debugzxcv, muggenhor, TheLonerD, DomB, and other contributors for integration and compatibility work.

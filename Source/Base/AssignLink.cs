@@ -131,9 +131,9 @@ namespace BetterPawnControl
                 return;
             }
 
-            var thing = colonist.inventoryStock.GetDesiredThingForGroup(InventoryStockGroupDefOf.Medicine);
+            var thing = stock.GetDesiredThingForGroup(InventoryStockGroupDefOf.Medicine);
             carriedMedicineThing = thing;
-            var count = colonist.inventoryStock.GetDesiredCountForGroup(InventoryStockGroupDefOf.Medicine);
+            var count = stock.GetDesiredCountForGroup(InventoryStockGroupDefOf.Medicine);
             carriedMedicineCount = count;
         }
     }

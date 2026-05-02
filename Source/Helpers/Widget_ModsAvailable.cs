@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using System;
 using Verse;
 using static BetterPawnControl.BetterPawnControlMod;
 
@@ -14,6 +15,7 @@ namespace BetterPawnControl
         private const string AAF = "Assign Animal Food";
         private const string WTB = "[1001]Weapons Tab Reborn";
         private const string MISCROBOTS = "Misc. Robots";
+        private const string DEFENSIVE_POSITIONS_PACKAGE_ID = "GonDragon.DefensivePositions";
 
         internal const string WORKTAB_MAINTAB = "WorkTab.MainTabWindow_WorkTab";
         internal const string ANIMALTAB_MAINTAB = "AnimalTab.MainTabWindow_Animals";
@@ -105,6 +107,22 @@ namespace BetterPawnControl
             get
             {
                 return Widget_CompositableLoadouts.CompositableLoadoutsAvailable;;
+            }
+        }
+
+        public static bool DefensivePositionsAvailable
+        {
+            get
+            {
+                return LoadedModManager.RunningModsListForReading.Any(mod => string.Equals(mod.PackageId, DEFENSIVE_POSITIONS_PACKAGE_ID, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        public static bool OutfitStandsPlusAvailable
+        {
+            get
+            {
+                return OutfitStandsPlusCompatibility.PackageLoaded();
             }
         }
     }

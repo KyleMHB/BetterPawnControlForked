@@ -197,6 +197,11 @@ namespace BetterPawnControl
 
 		internal static bool FoodPolicyExists(FoodPolicy foodPolicy)
 		{
+			if (foodPolicy == null || Current.Game?.foodRestrictionDatabase == null)
+			{
+				return false;
+			}
+
 			foreach (FoodPolicy food in Current.Game.foodRestrictionDatabase.AllFoodRestrictions)
 			{
 				if (food.Equals(foodPolicy))

@@ -4,6 +4,8 @@
     <TargetFramework>net472</TargetFramework>
     <Title>BetterPawnControl</Title>
     <Description>BetterPawnControl RimWorld Mod</Description>
+    <OutputPath>..\v1.6\Assemblies\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Copyright>Copyright © 2025</Copyright>
     <RepositoryUrl>https://github.com/voult2/BetterPawnControl</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -31,9 +33,5 @@
   <ItemGroup>
     <Publicize Include="Assembly-CSharp:Verse.Pawn.Tick" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy E:\BetterPawnControl\Source\bin\Release\net472\BetterPawnControl.dll D:\Steam\steamapps\common\RimWorld\Mods\BetterPawnControl\v1.6\Assemblies\ /Y" />
-  </Target>
 
 </Project>

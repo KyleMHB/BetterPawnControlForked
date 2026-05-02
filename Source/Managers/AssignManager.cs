@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using BetterPawnControl.Helpers;
 using RimWorld;
 using Verse;
@@ -220,12 +219,27 @@ namespace BetterPawnControl
                     if (link != null)
                     {
                         //colonist found! save 
-                        link.outfit = p.outfits.CurrentApparelPolicy;
-                        link.drugPolicy = p.drugs.CurrentPolicy;
-                        link.hostilityResponse = p.playerSettings.hostilityResponse;
-                        link.foodPolicy = p.foodRestriction.CurrentFoodPolicy;
-                        link.readingPolicy = p.reading.CurrentPolicy;
-                        link.medicinePolicy = p.playerSettings.medCare;
+                        if (p.outfits != null)
+                        {
+                            link.outfit = p.outfits.CurrentApparelPolicy;
+                        }
+                        if (p.drugs != null)
+                        {
+                            link.drugPolicy = p.drugs.CurrentPolicy;
+                        }
+                        if (p.playerSettings != null)
+                        {
+                            link.hostilityResponse = p.playerSettings.hostilityResponse;
+                            link.medicinePolicy = p.playerSettings.medCare;
+                        }
+                        if (p.foodRestriction != null)
+                        {
+                            link.foodPolicy = p.foodRestriction.CurrentFoodPolicy;
+                        }
+                        if (p.reading != null)
+                        {
+                            link.readingPolicy = p.reading.CurrentPolicy;
+                        }
                         link.SetInventoryStockForMedicine(p.inventoryStock);
 
                         if (Widget_CombatExtended.CombatExtendedAvailable)
@@ -251,25 +265,25 @@ namespace BetterPawnControl
                             compositableState = Widget_CompositableLoadouts.GetLoadoutId(p);
                         }
 
-                        ApparelPolicy outfit = p.outfits.CurrentApparelPolicy;
+                        ApparelPolicy outfit = p.outfits?.CurrentApparelPolicy;
                         if (outfit == Current.Game.outfitDatabase.DefaultOutfit())
                         {
                             outfit = AssignManager.DefaultOutfit;
                         }
 
-                        DrugPolicy drug = p.drugs.CurrentPolicy;
+                        DrugPolicy drug = p.drugs?.CurrentPolicy;
                         if (drug == Current.Game.drugPolicyDatabase.DefaultDrugPolicy())
                         {
                             drug = AssignManager.DefaultDrugPolicy;
                         }
 
-                        FoodPolicy food = p.foodRestriction.CurrentFoodPolicy;
+                        FoodPolicy food = p.foodRestriction?.CurrentFoodPolicy;
                         if (food == Current.Game.foodRestrictionDatabase.DefaultFoodRestriction())
                         {
                             food = AssignManager.DefaultFoodPolicy;
                         }
 
-                        ReadingPolicy reading = p.reading.CurrentPolicy;
+                        ReadingPolicy reading = p.reading?.CurrentPolicy;
                         if (reading == Current.Game.readingPolicyDatabase.DefaultReadingPolicy())
                         {
                             reading = AssignManager.DefaultReadingPolicy;
@@ -282,18 +296,17 @@ namespace BetterPawnControl
                                 food,
                                 drug,
                                 reading,
-                                p.playerSettings.hostilityResponse,
-                                p.playerSettings.medCare,
+                                p.playerSettings?.hostilityResponse ?? HostilityResponseMode.Flee,
+                                p.playerSettings?.medCare ?? MedicalCareCategory.Best,
                                 loadoutId,
                                 compositableState,
                                 currentMap);
                         AssignManager.links.Add(link);
                     }
                 }
-                catch
+                catch (System.Exception ex)
                 {
-                    //it seems a pawn became null during the links iteration so lets just move on
-                    Log.Message("BPC: A pawn became null during assign save state: " + p == null);
+                    Log.Warning("[BPC] Failed to save assignment state for pawn " + p.ToStringSafe() + ". " + ex.Message);
                 }
             }
         }
@@ -401,14 +414,28 @@ namespace BetterPawnControl
 
             foreach (Pawn p in pawns)
             {
+                if (p == null)
+                {
+                    continue;
+                }
+
                 foreach (AssignLink l in zoneLinks)
                 {
                     if (l.colonist != null && l.colonist.GetUniqueLoadID().Equals(p.GetUniqueLoadID()))
                     {
-                        l.hostilityResponse = p.playerSettings.hostilityResponse;
-                        l.foodPolicy = p.foodRestriction.CurrentFoodPolicy;
-                        l.outfit = p.outfits.CurrentApparelPolicy;
-                        l.medicinePolicy = p.playerSettings.medCare;
+                        if (p.playerSettings != null)
+                        {
+                            l.hostilityResponse = p.playerSettings.hostilityResponse;
+                            l.medicinePolicy = p.playerSettings.medCare;
+                        }
+                        if (p.foodRestriction != null)
+                        {
+                            l.foodPolicy = p.foodRestriction.CurrentFoodPolicy;
+                        }
+                        if (p.outfits != null)
+                        {
+                            l.outfit = p.outfits.CurrentApparelPolicy;
+                        }
                         if (Settings.saveInventoryStock)
                         {
                             l.SetInventoryStockForMedicine(p.inventoryStock);
@@ -422,14 +449,22 @@ namespace BetterPawnControl
 
         internal static void LoadState(List<AssignLink> links, List<Pawn> pawns, Policy policy)
         {
-            List<AssignLink> mapLinks = null;
-            List<AssignLink> zoneLinks = null;
+            if (policy == null)
+            {
+                return;
+            }
+            if (links == null || pawns == null)
+            {
+                AssignManager.SetActivePolicy(policy);
+                return;
+            }
+
             int currentMap = Find.CurrentMap.uniqueID;
 
             //get all links from the current map
-            mapLinks = links.FindAll(x => x.mapId == currentMap);
+            List<AssignLink> mapLinks = links.FindAll(x => x != null && x.mapId == currentMap);
             //get all links from the selected zone
-            zoneLinks = mapLinks.FindAll(x => x.zone == policy.id);
+            List<AssignLink> zoneLinks = mapLinks.FindAll(x => x.zone == policy.id);
 
             foreach (Pawn p in pawns)
             {
@@ -438,35 +473,122 @@ namespace BetterPawnControl
                     continue;
                 }
 
-                foreach (AssignLink l in zoneLinks)
+                AssignLink link = zoneLinks.FirstOrDefault(l => l.colonist != null && l.colonist.GetUniqueLoadID().Equals(p.GetUniqueLoadID()));
+                if (link != null)
                 {
-                    if (l.colonist != null && l.colonist.GetUniqueLoadID().Equals(p.GetUniqueLoadID()))
-                    {
-                        p.outfits.CurrentApparelPolicy = OutfitExits(l.outfit) ? l.outfit : null;
-                        p.drugs.CurrentPolicy = DrugPolicyExits(l.drugPolicy) ? l.drugPolicy : null;
-                        p.foodRestriction.CurrentFoodPolicy = FoodPolicyExists(l.foodPolicy) ? l.foodPolicy : null;
-                        p.reading.CurrentPolicy = ReadingPolicyExits(l.readingPolicy) ? l.readingPolicy : null;
-                        p.playerSettings.hostilityResponse = l.hostilityResponse;
-                        p.playerSettings.medCare = l.medicinePolicy;
-
-                        if (Settings.saveInventoryStock)
-                        {
-                            p.SetInventoryStock(InventoryStockGroupDefOf.Medicine, l.carriedMedicineThing, l.carriedMedicineCount);
-                        }
-
-                        if (Widget_CombatExtended.CombatExtendedAvailable)
-                        {
-                            Widget_CombatExtended.SetLoadoutById(p, l.loadoutId);
-                        }
-                        if (Widget_CompositableLoadouts.CompositableLoadoutsAvailable)
-                        {
-                            Widget_CompositableLoadouts.SetLoadoutById(p, l.compositableState);
-                        }
-                    }
+                    ApplyLinkToPawn(p, link);
                 }
             }
 
             AssignManager.SetActivePolicy(policy);
+        }
+
+        private static void ApplyLinkToPawn(Pawn pawn, AssignLink link)
+        {
+            ApparelPolicy previousOutfit = pawn.outfits?.CurrentApparelPolicy;
+            ApparelPolicy targetOutfit = ResolveOutfit(link.outfit, previousOutfit);
+
+            if (pawn.outfits != null && targetOutfit != null)
+            {
+                pawn.outfits.CurrentApparelPolicy = targetOutfit;
+            }
+            if (pawn.drugs != null)
+            {
+                DrugPolicy drugPolicy = ResolveDrugPolicy(link.drugPolicy, pawn.drugs.CurrentPolicy);
+                if (drugPolicy != null)
+                {
+                    pawn.drugs.CurrentPolicy = drugPolicy;
+                }
+            }
+            if (pawn.foodRestriction != null)
+            {
+                FoodPolicy foodPolicy = ResolveFoodPolicy(link.foodPolicy, pawn.foodRestriction.CurrentFoodPolicy);
+                if (foodPolicy != null)
+                {
+                    pawn.foodRestriction.CurrentFoodPolicy = foodPolicy;
+                }
+            }
+            if (pawn.reading != null)
+            {
+                ReadingPolicy readingPolicy = ResolveReadingPolicy(link.readingPolicy, pawn.reading.CurrentPolicy);
+                if (readingPolicy != null)
+                {
+                    pawn.reading.CurrentPolicy = readingPolicy;
+                }
+            }
+            if (pawn.playerSettings != null)
+            {
+                pawn.playerSettings.hostilityResponse = link.hostilityResponse;
+                pawn.playerSettings.medCare = link.medicinePolicy;
+            }
+
+            if (Settings.saveInventoryStock)
+            {
+                pawn.SetInventoryStock(InventoryStockGroupDefOf.Medicine, link.carriedMedicineThing, link.carriedMedicineCount);
+            }
+
+            if (Widget_CombatExtended.CombatExtendedAvailable)
+            {
+                Widget_CombatExtended.SetLoadoutById(pawn, link.loadoutId);
+            }
+            if (Widget_CompositableLoadouts.CompositableLoadoutsAvailable)
+            {
+                Widget_CompositableLoadouts.SetLoadoutById(pawn, link.compositableState);
+            }
+
+            OutfitStandsPlusCompatibility.TryUseAssignedStandForPolicy(pawn, previousOutfit, targetOutfit);
+        }
+
+        private static ApparelPolicy ResolveOutfit(ApparelPolicy savedPolicy, ApparelPolicy currentPolicy)
+        {
+            if (OutfitExits(savedPolicy))
+            {
+                return savedPolicy;
+            }
+            if (OutfitExits(currentPolicy))
+            {
+                return currentPolicy;
+            }
+            return OutfitExits(DefaultOutfit) ? DefaultOutfit : Current.Game.outfitDatabase.DefaultOutfit();
+        }
+
+        private static DrugPolicy ResolveDrugPolicy(DrugPolicy savedPolicy, DrugPolicy currentPolicy)
+        {
+            if (DrugPolicyExits(savedPolicy))
+            {
+                return savedPolicy;
+            }
+            if (DrugPolicyExits(currentPolicy))
+            {
+                return currentPolicy;
+            }
+            return DrugPolicyExits(DefaultDrugPolicy) ? DefaultDrugPolicy : Current.Game.drugPolicyDatabase.DefaultDrugPolicy();
+        }
+
+        private static FoodPolicy ResolveFoodPolicy(FoodPolicy savedPolicy, FoodPolicy currentPolicy)
+        {
+            if (FoodPolicyExists(savedPolicy))
+            {
+                return savedPolicy;
+            }
+            if (FoodPolicyExists(currentPolicy))
+            {
+                return currentPolicy;
+            }
+            return FoodPolicyExists(DefaultFoodPolicy) ? DefaultFoodPolicy : Current.Game.foodRestrictionDatabase.DefaultFoodRestriction();
+        }
+
+        private static ReadingPolicy ResolveReadingPolicy(ReadingPolicy savedPolicy, ReadingPolicy currentPolicy)
+        {
+            if (ReadingPolicyExits(savedPolicy))
+            {
+                return savedPolicy;
+            }
+            if (ReadingPolicyExits(currentPolicy))
+            {
+                return currentPolicy;
+            }
+            return ReadingPolicyExits(DefaultReadingPolicy) ? DefaultReadingPolicy : Current.Game.readingPolicyDatabase.DefaultReadingPolicy();
         }
 
         internal static void LoadState(Policy policy)
@@ -477,6 +599,11 @@ namespace BetterPawnControl
 
         internal static bool OutfitExits(ApparelPolicy outfit)
         {
+            if (outfit == null || Current.Game?.outfitDatabase == null)
+            {
+                return false;
+            }
+
             foreach (ApparelPolicy current in Current.Game.outfitDatabase.AllOutfits)
             {
                 if (current.Equals(outfit))
@@ -489,6 +616,11 @@ namespace BetterPawnControl
 
         internal static bool DrugPolicyExits(DrugPolicy drugPolicy)
         {
+            if (drugPolicy == null || Current.Game?.drugPolicyDatabase == null)
+            {
+                return false;
+            }
+
             foreach (DrugPolicy drug in Current.Game.drugPolicyDatabase.AllPolicies)
             {
                 if (drug.Equals(drugPolicy))
@@ -501,6 +633,11 @@ namespace BetterPawnControl
 
         internal static bool ReadingPolicyExits(ReadingPolicy readingPolicy)
         {
+            if (readingPolicy == null || Current.Game?.readingPolicyDatabase == null)
+            {
+                return false;
+            }
+
             foreach (ReadingPolicy reading in Current.Game.readingPolicyDatabase.AllReadingPolicies)
             {
                 if (reading.Equals(readingPolicy))
