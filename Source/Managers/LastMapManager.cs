@@ -1,6 +1,6 @@
-﻿using Verse;
+using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     internal static class LastMapManager
@@ -18,3 +18,5 @@ namespace BetterPawnControl
         //}
     }
 }
+
+

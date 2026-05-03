@@ -1,7 +1,7 @@
-﻿using System.Text;
+using System.Text;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class RobotLink : Link, IExposable
     {
@@ -39,3 +39,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

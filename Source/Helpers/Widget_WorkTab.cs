@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +7,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Widget_WorkTab
@@ -99,56 +99,64 @@ namespace BetterPawnControl
 
         public static List<int> GetWorkTabPriorities(Pawn pawn, WorkGiverDef workGiver)
         {
-            if (pawn == null)
-                throw new ArgumentNullException(nameof(pawn));
-            if (workGiver == null)
-                throw new ArgumentNullException(nameof(workGiver));
-
-            if (!init)
+            if (pawn == null || workGiver == null || !init)
                 return null;
 
-            if (gcPriorityManager == null)
+            try
             {
-                gcPriorityManager = Current.Game?.GetComponent(priorityManager);
+                if (gcPriorityManager == null)
+                {
+                    gcPriorityManager = Current.Game?.GetComponent(priorityManager);
+                }
+
+                var array = getPriorities.Invoke(null, new object[] { pawn, workGiver }) as int[];
+                if (array == null)
+                {
+                    return null;
+                }
+
+                return new List<int>(array);
             }
-
-            var array = (int[]) getPriorities.Invoke(null, new object[] { pawn, workGiver });
-            var result = new List<int>(array);
-
-            return result;
+            catch (Exception ex)
+            {
+                Log.Warning("[BPC] Work Tab priority read failed for " + pawn.ToStringSafe() + " / " + workGiver.defName + ". " + ex.Message);
+                return null;
+            }
         }
 
         public static void SetWorkTabPriorities(Pawn pawn, WorkGiverDef workGiver, List<int> hours)
         {
-            if (pawn == null)
-                throw new ArgumentNullException(nameof(pawn));
-            if (workGiver == null)
-                throw new ArgumentNullException(nameof(workGiver));
-            if (hours == null)
-                throw new ArgumentNullException(nameof(hours));
-
-            if (!init)
+            if (pawn == null || workGiver == null || hours == null || !init)
                 return;
 
-            for (int hour = 0; hour < hours.Count; hour++)
+            try
             {
-                setPriority.Invoke(null, new object[] { pawn, workGiver, hours[hour], hour, false });
-            }
-
-            if (gcPriorityManager == null)
-            {
-                gcPriorityManager = Current.Game?.GetComponent(priorityManager);
-            }
-
-            if (gcPriorityManager != null)
-            {
-                var pt = getPriorityTrackerByPawn.Invoke(gcPriorityManager, new object[] { pawn });
-                if (pt != null)
+                for (int hour = 0; hour < hours.Count; hour++)
                 {
-                    invalidateCache.Invoke(pt, new object[] { workGiver, true });
-                    onChange.Invoke(pt, null);
+                    setPriority.Invoke(null, new object[] { pawn, workGiver, hours[hour], hour, false });
                 }
+
+                if (gcPriorityManager == null)
+                {
+                    gcPriorityManager = Current.Game?.GetComponent(priorityManager);
+                }
+
+                if (gcPriorityManager != null)
+                {
+                    var pt = getPriorityTrackerByPawn.Invoke(gcPriorityManager, new object[] { pawn });
+                    if (pt != null)
+                    {
+                        invalidateCache.Invoke(pt, new object[] { workGiver, true });
+                        onChange.Invoke(pt, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("[BPC] Work Tab priority apply failed for " + pawn.ToStringSafe() + " / " + workGiver.defName + ". " + ex.Message);
             }
         }
     }
 }
+
+

@@ -13,7 +13,9 @@ This fork focuses on RimWorld 1.6 compatibility and safer interaction with other
 - **Default policies** for new colonists, prisoners, and slaves.
 - **Emergency toggle** for quickly applying configured policy sets.
 - **Integration-aware apparel handling** for Outfit Stands Plus Forked.
-- **Compatibility checks** that avoid interrupting Defensive Positions Forked gear and movement flows.
+- **Capability-based compatibility checks** for DLC and modded pawn setups, including nonstandard humanlike pawns with partial trackers.
+- **Optional schedule compatibility** for Progression: Education class assignments.
+- **Worktype-safe work policy handling** for Work Tab, FSF Complex Jobs, and other worktype overhauls.
 
 ## Installation
 
@@ -45,6 +47,8 @@ Key settings and supported behaviors include:
 - emergency policy switching
 - optional Work Tab integration
 - optional animal, mech, robot, and loadout integrations
+- optional Progression: Education schedule syncing
+- capability-aware handling for DLC and modded pawns
 - Outfit Stands Plus Forked apparel policy triggering
 
 ## Building from Source
@@ -57,17 +61,17 @@ Prerequisites:
 Build the 1.6 assembly from the repository root:
 
 ```powershell
-dotnet build .\Source\BetterPawnControl.csproj -c Release /p:UseSharedCompilation=false
+dotnet build .\Source\BetterPawnControlForked.csproj -c Release /p:UseSharedCompilation=false
 ```
 
-The compiled DLL is copied manually into `v1.6/Assemblies/BetterPawnControl.dll` when preparing a local mod package.
+The compiled DLL is copied manually into `v1.6/Assemblies/BetterPawnControlForked.dll` when preparing a local mod package.
 
 ## Testing and Validation
 
 The primary validation command is the Release build:
 
 ```powershell
-dotnet build .\Source\BetterPawnControl.csproj -c Release /p:UseSharedCompilation=false
+dotnet build .\Source\BetterPawnControlForked.csproj -c Release /p:UseSharedCompilation=false
 ```
 
 ## Contributing & Forking Policy
@@ -82,13 +86,19 @@ dotnet build .\Source\BetterPawnControl.csproj -c Release /p:UseSharedCompilatio
 
 ## License
 
-> This project is a fork of **Better Pawn Control** and inherits the original project's license. See the original project for license terms: <https://github.com/voult2/BetterPawnControl>.
+> This project is a fork and inherits the original project's license. See the original project for license terms: <https://github.com/voult2/BetterPawnControl>.
 
 ## Credits
 
-- VouLT for Better Pawn Control.
+- VouLT for the original Better Pawn Control mod.
 - Fluffy for Animal Tab integration help.
 - Skyarkhangel for Combat Realism integration support.
 - Marnador for the logo font.
 - Lauri7x3, Coldmoon, boundir, Proxyer, 53N4, Crusader, Deno226, Ionfrigate, and others for translations and updates.
 - debugzxcv, muggenhor, TheLonerD, DomB, and other contributors for integration and compatibility work.
+- Machado for the BetterPawnControl ProgressionEducation Patch: <https://steamcommunity.com/sharedfiles/filedetails/?id=3673605975>.
+
+
+
+
+

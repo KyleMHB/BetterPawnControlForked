@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class AlertLevel: IExposable
     {
@@ -47,3 +47,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

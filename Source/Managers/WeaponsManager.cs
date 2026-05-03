@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.Noise;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     class WeaponsManager : Manager<WeaponsLink>
@@ -59,10 +59,11 @@ namespace BetterPawnControl
         internal static void SaveCurrentState(List<Pawn> pawns)
         {
 			int currentMap = Find.CurrentMap.uniqueID;
+            int activePolicyId = WeaponsManager.GetActivePolicy().id;
             //Save current state
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsWeapons(p))
                 {
                     continue;
                 }
@@ -70,7 +71,7 @@ namespace BetterPawnControl
                 WeaponsLink weaponLink =
                     WeaponsManager.links.Find(
                         x => x != null && x.colonist != null && p != null && p.Equals(x.colonist) &&
-                        x.zone == WeaponsManager.GetActivePolicy().id &&
+                        x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
                 if (weaponLink != null )
@@ -81,8 +82,8 @@ namespace BetterPawnControl
                 {
                     //Weapon not found. So add it to the WeaponLink list
                     WeaponsManager.links.Add(
-                        new WeaponsLink(
-                            WeaponsManager.GetActivePolicy().id,
+                            new WeaponsLink(
+                            activePolicyId,
                             p,
                             Widget_WeaponsTabReborn.GetLoadoutId(p),
                             currentMap)); ; ;
@@ -99,7 +100,7 @@ namespace BetterPawnControl
         {
             for (int i = WeaponsManager.links.Count - 1; i >= 0; i--)
             {
-                if (WeaponsManager.links[i].colonist == null || !WeaponsManager.links[i].colonist.IsColonist)
+                if (WeaponsManager.links[i].colonist == null || !PawnCompatibility.ShouldKeepWeaponsLink(WeaponsManager.links[i].colonist))
                 {
                     WeaponsManager.links.RemoveAt(i);
                 }
@@ -119,7 +120,7 @@ namespace BetterPawnControl
 
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsWeapons(p))
                 {
                     continue;
                 }
@@ -137,7 +138,7 @@ namespace BetterPawnControl
 
         internal static void LoadState(Policy policy)
         {
-            List<Pawn> pawns = Find.CurrentMap.mapPawns.FreeColonists.ToList();
+            List<Pawn> pawns = WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList();
             LoadState(WeaponsManager.links, pawns, policy);
         }
 
@@ -215,7 +216,7 @@ namespace BetterPawnControl
         internal static void CopyToClipboard()
         {
             //Save state in case user has made changes to the active policy
-            WeaponsManager.SaveCurrentState(AssignManager.Colonists().ToList());
+            WeaponsManager.SaveCurrentState(WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList());
 
             Policy policy = GetActivePolicy();
 
@@ -240,7 +241,7 @@ namespace BetterPawnControl
                     copiedLink.zone = policy.id;
                     WeaponsManager.links.Add(copiedLink);
                 }
-                WeaponsManager.LoadState(links, Find.CurrentMap.mapPawns.FreeColonists, policy);
+                WeaponsManager.LoadState(links, WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList(), policy);
             }
         }
 
@@ -270,3 +271,4 @@ namespace BetterPawnControl
 
     }
 }
+

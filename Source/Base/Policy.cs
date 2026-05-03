@@ -1,6 +1,6 @@
-﻿using Verse;
+using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class Policy : IExposable, IRenameable
     {
@@ -45,3 +45,4 @@ namespace BetterPawnControl
         }
     }
 }
+

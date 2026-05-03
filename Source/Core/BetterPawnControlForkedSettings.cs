@@ -1,8 +1,8 @@
-﻿using Verse;
+using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
-    public class BetterPawnControlSettings : ModSettings
+    public class BetterPawnControlForkedSettings : ModSettings
     {
         public bool automaticPawnsInterrupt = true;
         public bool disableBPCOnWorkTab = false;
@@ -27,3 +27,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

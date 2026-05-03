@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     internal static class AlertManager
@@ -46,7 +46,7 @@ namespace BetterPawnControl
 
         internal static void PawnsInterruptForced()
         {
-            List<Pawn> PawnsList = Find.CurrentMap.mapPawns.FreeColonists.ToList();
+            List<Pawn> PawnsList = PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap);
             foreach (Pawn pawn in PawnsList)
             {
                 pawn.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
@@ -205,3 +205,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

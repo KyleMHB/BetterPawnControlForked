@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.Noise;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     class ScheduleManager : Manager<ScheduleLink>
@@ -55,7 +55,7 @@ namespace BetterPawnControl
             //Save current state
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsSchedule(p))
                 {
                     continue;
                 }
@@ -71,9 +71,16 @@ namespace BetterPawnControl
                     if (link != null)
                     {
                         //colonist found! save 
-                        link.area = p.playerSettings.AreaRestrictionInPawnCurrentMap;
+                        if (p.playerSettings != null)
+                        {
+                            link.area = p.playerSettings.AreaRestrictionInPawnCurrentMap;
+                        }
                         if (p.timetable != null)
                         {
+                            if (link.schedule == null)
+                            {
+                                link.schedule = new List<TimeAssignmentDef>();
+                            }
                             ScheduleManager.CopySchedule(p.timetable.times, link.schedule);
                         }
                     }
@@ -84,7 +91,7 @@ namespace BetterPawnControl
                             new ScheduleLink(
                                 activePolicyId,
                                 p,
-                                p.playerSettings.AreaRestrictionInPawnCurrentMap,
+                                p.playerSettings?.AreaRestrictionInPawnCurrentMap,
                                 p.timetable != null ? p.timetable.times : null,
                                 currentMap));
                     }
@@ -100,6 +107,11 @@ namespace BetterPawnControl
 
         internal static bool CopySchedule(List<TimeAssignmentDef> src, List<TimeAssignmentDef> dst)
         {
+            if (src == null || dst == null)
+            {
+                return false;
+            }
+
             var isEquals = false;
 
             if (src.Count == dst.Count)
@@ -130,7 +142,7 @@ namespace BetterPawnControl
         {
             for (int i = ScheduleManager.links.Count - 1; i >= 0; i--)
             {
-                if (ScheduleManager.links[i].colonist == null || !ScheduleManager.links[i].colonist.IsColonist)
+                if (ScheduleManager.links[i].colonist == null || !PawnCompatibility.ShouldKeepScheduleLink(ScheduleManager.links[i].colonist))
                 {
                     ScheduleManager.links.RemoveAt(i);
                 }
@@ -219,11 +231,19 @@ namespace BetterPawnControl
 
             foreach (Pawn p in pawns)
             {
+                if (!PawnCompatibility.SupportsSchedule(p))
+                {
+                    continue;
+                }
+
                 foreach (ScheduleLink l in zoneLinks)
                 {
-                    if (l.colonist != null && l.colonist.GetUniqueLoadID().Equals(p.GetUniqueLoadID()))
+                    if (l.colonist != null && PawnCompatibility.TryPawnKey(l.colonist, out var linkKey) && PawnCompatibility.TryPawnKey(p, out var pawnKey) && linkKey.Equals(pawnKey))
                     {
-                        l.area = p.playerSettings.AreaRestrictionInPawnCurrentMap;
+                        if (p.playerSettings != null)
+                        {
+                            l.area = p.playerSettings.AreaRestrictionInPawnCurrentMap;
+                        }
                     }
                 }
             }
@@ -244,7 +264,7 @@ namespace BetterPawnControl
 
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsSchedule(p))
                 {
                     continue;
                 }
@@ -254,7 +274,7 @@ namespace BetterPawnControl
                 {
                     if (l.colonist != null && l.colonist.Equals(p))
                     {
-                        if (p.playerSettings.AreaRestrictionInPawnCurrentMap != l.area)
+                        if (p.playerSettings != null && p.playerSettings.AreaRestrictionInPawnCurrentMap != l.area)
                         {
                             p.playerSettings.AreaRestrictionInPawnCurrentMap = l.area;
                             tick = true;
@@ -262,13 +282,14 @@ namespace BetterPawnControl
 
                         if (l.schedule != null && p.timetable != null)
                         {
+                            l.RepairSchedule();
                             var updated = ScheduleManager.CopySchedule(l.schedule, p.timetable.times);
                             tick = updated == true;
                         }
                     }
                 }
 
-                if (tick && BetterPawnControlMod.Settings.automaticPawnsInterrupt &&
+                if (tick && BetterPawnControlForkedMod.Settings.automaticPawnsInterrupt &&
                     p.jobs?.curJob != null &&
                     p.jobs.IsCurrentJobPlayerInterruptible() &&
                     !p.Downed &&
@@ -284,7 +305,7 @@ namespace BetterPawnControl
 
         internal static void LoadState(Policy policy)
         {
-            List<Pawn> pawns = Find.CurrentMap.mapPawns.FreeColonists.ToList();
+            List<Pawn> pawns = ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList();
             LoadState(ScheduleManager.links, pawns, policy);
         }
 
@@ -314,7 +335,7 @@ namespace BetterPawnControl
         internal static void CopyToClipboard()
         {
             //Save state in case user has made changes to the active policy
-            ScheduleManager.SaveCurrentState(ScheduleManager.Colonists().ToList());
+            ScheduleManager.SaveCurrentState(ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList());
             Policy policy = GetActivePolicy();
             //if (ScheduleManager.clipboard != null)
             //{
@@ -341,8 +362,10 @@ namespace BetterPawnControl
                     copiedLink.zone = policy.id;
                     ScheduleManager.links.Add(copiedLink);
                 }
-                ScheduleManager.LoadState(links, Find.CurrentMap.mapPawns.FreeColonists.ToList(), policy);
+                ScheduleManager.LoadState(links, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList(), policy);
             }
         }
     }
 }
+
+

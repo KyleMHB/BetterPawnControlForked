@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.Sound;
-using static BetterPawnControl.BetterPawnControlMod;
+using static BetterPawnControlForked.BetterPawnControlForkedMod;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
     [HarmonyPatch(typeof(PlaySettings), "DoPlaySettingsGlobalControls")]
     internal static class PlaySettings_DoPlaySettingsGlobalControls
@@ -83,3 +83,4 @@ namespace BetterPawnControl.Patches
         }
     }
 }
+

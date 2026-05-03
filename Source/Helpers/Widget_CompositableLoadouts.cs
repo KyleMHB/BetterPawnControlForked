@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Widget_CompositableLoadouts
     {
         private const string PF_MOD_NAME = "Compositable Loadouts";
-        private const string PF_TYPE_UTILS = "Inventory.BetterPawnControl";
+        private const string PF_TYPE_UTILS = "Inventory.BetterPawnControlForked";
 
         private const string PF_METHOD_GETLOADOUT = "GetLoadoutId";
         private const string PF_METHOD_SETLOADOUT = "SetLoadoutById";
@@ -98,3 +98,4 @@ namespace BetterPawnControl
 
     }
 }
+

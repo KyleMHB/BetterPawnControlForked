@@ -1,12 +1,12 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using static BetterPawnControl.BetterPawnControlMod;
+using static BetterPawnControlForked.BetterPawnControlForkedMod;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     class Dialog_ManagePolicies : Window
     {
@@ -106,7 +106,7 @@ namespace BetterPawnControl
         }
 
         /// <summary>
-        /// Draw AnimalPolicys management table √† l√° vanilla
+        /// Draw AnimalPolicys management table ‡ l· vanilla
         /// </summary>
         public override void DoWindowContents(Rect inRect)
         {
@@ -854,7 +854,8 @@ namespace BetterPawnControl
                         return "BPC.RobotsTab";
                 }
 
-                throw new NotImplementedException($"Type {type} is not supported.");
+                Log.Warning("[BPC] Missing policy label for " + type + ".");
+                return type.ToString();
             }
 
             private static string GetNewButtonLabelKey(Resources.Type type)
@@ -877,8 +878,11 @@ namespace BetterPawnControl
                         return "BPC.NewRobotsPolicy";
                 }
 
-                throw new NotImplementedException($"Type {type} is not supported.");
+                Log.Warning("[BPC] Missing policy label for " + type + ".");
+                return type.ToString();
             }
         }
     }
 }
+
+

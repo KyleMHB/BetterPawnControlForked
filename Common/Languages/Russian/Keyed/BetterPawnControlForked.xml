@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-  <BPC.BetterPawnControl>Better Pawn Control</BPC.BetterPawnControl>
+  <BPC.BetterPawnControlForked>Better Pawn Control Forked</BPC.BetterPawnControlForked>
 
   <BPC.Auto>Авто</BPC.Auto>
   <BPC.Rename>Переименовать</BPC.Rename>
@@ -73,11 +73,11 @@
   <BPC.PasteSchedule>Вставить расписание</BPC.PasteSchedule>
 
   <BPC.ToggleEmergencyOn>Выключить режим тревоги. Политики будут переключены на предыдущие значения до тревоги.</BPC.ToggleEmergencyOn>
-  <BPC.ToggleEmergencyOff>Включить режим тревоги. Политики назначаемые при тревоге можно настроить в окне Better Pawn Control, после нажатия кнопки с шестерёнкой.</BPC.ToggleEmergencyOff>
+  <BPC.ToggleEmergencyOff>Включить режим тревоги. Политики назначаемые при тревоге можно настроить в окне Better Pawn Control Forked, после нажатия кнопки с шестерёнкой.</BPC.ToggleEmergencyOff>
   <BPC.AlertConfigText>Выбор политики при включении режима тревоги. Используйте горячую клавишу для быстрого переключения режима.</BPC.AlertConfigText>
   <BPC.EmergencyLocationTooltip>Кнопка режима тревоги находится справа внизу под кнопками переключения скорости игры.</BPC.EmergencyLocationTooltip>
 
-  <BPC.BetterPawnControlSettingsName>Better Pawn Control</BPC.BetterPawnControlSettingsName>
+  <BPC.BetterPawnControlForkedSettingsName>Better Pawn Control Forked</BPC.BetterPawnControlForkedSettingsName>
   <BPC.AutomaticPawnsInterruptSetting>Прерывать текущую работу поселенца при включении режима тревоги</BPC.AutomaticPawnsInterruptSetting>
   <BPC.SaveInventoryStock>Сохранять колонку "Иметь при себе" в политиках Назначения.</BPC.SaveInventoryStock>
   <BPC.DisableBPCOnWorkTabSetting>Отключить поддержку мода WorkTab.</BPC.DisableBPCOnWorkTabSetting>
@@ -86,3 +86,5 @@
   <BPC.DisableBPCWorkTabInnerPrioritiesTooltip>Значения подприоритетов WorkTab не будут сохраняться в политиках работ.</BPC.DisableBPCWorkTabInnerPrioritiesTooltip>
 
 </LanguageData>
+
+

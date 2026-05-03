@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class Dialog_RenamePolicy : Dialog_Rename<Policy>
     {
@@ -100,3 +100,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

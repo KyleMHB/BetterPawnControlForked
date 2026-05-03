@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [HarmonyPatch(typeof(TrainingCardUtility), nameof(TrainingCardUtility.DrawTrainingCard))]
     public static class TrainingCardUtility_DrawTrainingCard
@@ -30,3 +30,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

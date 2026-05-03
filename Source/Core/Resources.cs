@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Resources
@@ -13,7 +13,7 @@ namespace BetterPawnControl
         [DefOf]
         public static class Hotkeys
         {
-            public static KeyBindingDef BetterPawnControlEmergency;
+            public static KeyBindingDef BetterPawnControlForkedEmergency;
         }
 
         [StaticConstructorOnStartup]
@@ -26,3 +26,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

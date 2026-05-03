@@ -59,11 +59,12 @@
   <BPC.PasteSchedule>Coller le planning</BPC.PasteSchedule>
   
   <BPC.ToggleEmergencyOn>Désactiver l'alarme. Les arrangements seront rétablies aux paramètres précédents avant l'alarme</BPC.ToggleEmergencyOn>
-  <BPC.ToggleEmergencyOff>Activer l'alarme. Configurez quels arrangements doivent être activées pour tous les onglets dans la configuration de Better Pawn Control</BPC.ToggleEmergencyOff>
+  <BPC.ToggleEmergencyOff>Activer l'alarme. Configurez quels arrangements doivent être activées pour tous les onglets dans la configuration de Better Pawn Control Forked</BPC.ToggleEmergencyOff>
   <BPC.AlertConfigText>Configurez quels arrangements à activer lorsque l'alarme est activée. Utilisez le raccourci clavier pour activer/désactiver l'alarme</BPC.AlertConfigText>
 	<BPC.EmergencyLocationTooltip>Le bouton d'alarme se trouve dans le coin inférieur droit de la fenêtre de jeu, à côté des boutons bascule</BPC.EmergencyLocationTooltip>
 	
-	<BPC.BetterPawnControlSettingsName>Better Pawn Control</BPC.BetterPawnControlSettingsName>
+	<BPC.BetterPawnControlForkedSettingsName>Better Pawn Control Forked</BPC.BetterPawnControlForkedSettingsName>
 	<BPC.AutomaticPawnsInterruptSetting>Lors de l'activation de l'alarme, Est-ce qu'on interrompt automatiquement ce que font les colonistes?</BPC.AutomaticPawnsInterruptSetting>		
 
 </LanguageData>
+

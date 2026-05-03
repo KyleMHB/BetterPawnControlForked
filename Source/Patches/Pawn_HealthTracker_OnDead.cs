@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
     [HarmonyPatch(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.SetDead))]
     static class Pawn_HealthTracker_OnDead
@@ -28,3 +28,5 @@ namespace BetterPawnControl.Patches
         }
     }
 }
+
+

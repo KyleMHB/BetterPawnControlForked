@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
     [HarmonyPatch(typeof(Window), nameof(Window.PreClose))]
     static class Window_PreClose
@@ -12,20 +12,20 @@ namespace BetterPawnControl.Patches
         {
             if (__instance.GetType().Equals(typeof(MainTabWindow_Assign)) || __instance.GetType().FullName.Equals(Widget_ModsAvailable.WEAPONSTAB_MAINTAB)) 
             {
-                AssignManager.SaveCurrentState(AssignManager.Colonists().ToList());
+                AssignManager.SaveCurrentState(AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList());
                 AssignManager.LinksCleanUp();
             }
 
             if (__instance.GetType().Equals(typeof(MainTabWindow_Work)) || (__instance.GetType().FullName.Equals(Widget_ModsAvailable.WORKTAB_MAINTAB) && !Widget_ModsAvailable.DisableBPCOnWorkTab) || __instance.GetType().FullName.Equals(Widget_ModsAvailable.NUMBERS_MAINTAB))
             {
-                WorkManager.SaveCurrentState(WorkManager.Colonists().ToList());
+                WorkManager.SaveCurrentState(WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList());
                 WorkManager.LinksCleanUp();
                 Widget_WorkTab.ClearCache();
             }
 
             if (__instance.GetType().Equals(typeof(MainTabWindow_Schedule)))
             {
-                ScheduleManager.SaveCurrentState(ScheduleManager.Colonists().ToList());
+                ScheduleManager.SaveCurrentState(ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList());
                 ScheduleManager.LinksCleanUp();
             }
 
@@ -43,7 +43,7 @@ namespace BetterPawnControl.Patches
 
             if (__instance.GetType().FullName.Equals(Widget_ModsAvailable.WEAPONSTAB_MAINTAB) && Widget_ModsAvailable.WTBAvailable)
             {
-                WeaponsManager.SaveCurrentState(WeaponsManager.Colonists().ToList());
+                WeaponsManager.SaveCurrentState(WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList());
                 WeaponsManager.LinksCleanUp();
             }
 
@@ -55,3 +55,5 @@ namespace BetterPawnControl.Patches
         }
     }
 }
+
+

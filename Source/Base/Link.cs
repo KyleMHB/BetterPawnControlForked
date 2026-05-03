@@ -1,6 +1,6 @@
-﻿using Verse;
+using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class Link
     {
@@ -24,3 +24,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

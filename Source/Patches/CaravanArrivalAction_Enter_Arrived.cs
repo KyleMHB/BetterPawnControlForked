@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld.Planet;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
 
     [HarmonyPatch(typeof(CaravanArrivalAction_Enter), nameof(CaravanArrivalAction_Enter.Arrived))]
@@ -29,3 +29,4 @@ namespace BetterPawnControl
         }
     }
 }   
+

@@ -1,7 +1,7 @@
-﻿using RimWorld;
+using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class MechLink : Link, IExposable
     {
@@ -61,3 +61,4 @@ namespace BetterPawnControl
         }
     }
 }
+

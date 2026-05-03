@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Better Pawn Control</name>
+	<name>Better Pawn Control Forked</name>
 	<author>KyleMHB</author>
 	<supportedVersions>
 		<li>1.6</li>
 	</supportedVersions>
-	<packageId>VouLT.BetterPawnControl</packageId>
-	<url>https://github.com/voult2/BetterPawnControl</url>
+	<packageId>KyleMHB.BetterPawnControlForked</packageId>
+	<url>https://github.com/KyleMHB/BetterPawnControlForked</url>
 	<description>Bulk-manage RimWorld pawn policies for outfits, schedules, work, animals, mechs, and supported integrations.</description>
 	<modDependencies>
 		<li>
@@ -24,7 +24,12 @@
 		<li>Ludeon.RimWorld</li>
 		<li>UnlimitedHugs.HugsLib</li>
 		<li>CETeam.CombatExtended</li>
+		<li>FrozenSnowFox.ComplexJobs</li>
+		<li>ferny.ProgressionEducation</li>
 		<li>GonDragon.DefensivePositions</li>
 		<li>khamenman.OutfitStandsPLus</li>
 	</loadAfter>
 </ModMetaData>
+
+
+

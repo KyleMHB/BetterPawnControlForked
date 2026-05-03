@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.Noise;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     class WorkManager : Manager<WorkLink>
@@ -43,10 +43,11 @@ namespace BetterPawnControl
         internal static void SaveCurrentState(List<Pawn> pawns)
         {
             int currentMap = Find.CurrentMap.uniqueID;
+            int activePolicyId = WorkManager.GetActivePolicy().id;
             //Save current state
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsWork(p))
                 {
                     continue;
                 }
@@ -56,7 +57,7 @@ namespace BetterPawnControl
                     //find colonist in the current zone in the current map
                     WorkLink link = WorkManager.links.Find(
                         x => x != null && x.colonist != null && p != null && p.Equals(x.colonist) &&
-                        x.zone == WorkManager.GetActivePolicy().id &&
+                        x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
                     if (link != null)
@@ -68,7 +69,7 @@ namespace BetterPawnControl
                     {
                         //colonist not found. So add it to the WorkLink list
                         link = new WorkLink(
-                            WorkManager.GetActivePolicy().id,
+                            activePolicyId,
                             p,
                             new Dictionary<WorkTypeDef, int>(),
                             new Dictionary<WorkGiverDef, List<int>>(),
@@ -94,7 +95,7 @@ namespace BetterPawnControl
         {
             for (int i = WorkManager.links.Count - 1; i >= 0; i--)
             {
-                if (WorkManager.links[i].colonist == null || !WorkManager.links[i].colonist.IsColonist)
+                if (WorkManager.links[i].colonist == null || !PawnCompatibility.ShouldKeepWorkLink(WorkManager.links[i].colonist))
                 {
                     WorkManager.links.RemoveAt(i);
                 }
@@ -183,7 +184,7 @@ namespace BetterPawnControl
 
             foreach (Pawn p in pawns)
             {
-                if (p == null)
+                if (!PawnCompatibility.SupportsWork(p))
                 {
                     continue;
                 }
@@ -202,15 +203,20 @@ namespace BetterPawnControl
 
         internal static void LoadState(Policy policy)
         {
-            List<Pawn> pawns = Find.CurrentMap.mapPawns.FreeColonists.ToList();
+            List<Pawn> pawns = WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList();
             LoadState(WorkManager.links, pawns, policy);
         }
 
         internal static void SavePawnPriorities(Pawn p, WorkLink link)
         {
-            if (link.settings != null)
+            if (link.settings != null && PawnCompatibility.SupportsWork(p))
             {
-                foreach (var worktype in DefDatabase<WorkTypeDef>.AllDefsListForReading)
+                if (link.settingsInner == null)
+                {
+                    link.settingsInner = new Dictionary<WorkGiverDef, List<int>>();
+                }
+
+                foreach (var worktype in PawnCompatibility.WorkTypesFor(p))
                 {
                     link.settings.SetOrAdd(worktype, p.workSettings.GetPriority(worktype));
 
@@ -232,10 +238,15 @@ namespace BetterPawnControl
 
         internal static void LoadPawnPriorities(Pawn p, WorkLink link)
         {
+            if (!PawnCompatibility.SupportsWork(p))
+            {
+                return;
+            }
+
             if (link.settings != null)
             {
                 //foreach (KeyValuePair<WorkTypeDef, int> entry in link.settings)
-                foreach (KeyValuePair<WorkTypeDef, int> entry in link.settings.Where(pair => !p.WorkTypeIsDisabled(pair.Key)))
+                foreach (KeyValuePair<WorkTypeDef, int> entry in link.settings.Where(pair => pair.Key != null && !p.WorkTypeIsDisabled(pair.Key)))
                 {
                     try
                     {
@@ -253,7 +264,10 @@ namespace BetterPawnControl
             {
                 foreach (var entryInner in link.settingsInner)
                 {
-                    Widget_WorkTab.SetWorkTabPriorities(p, entryInner.Key, entryInner.Value);
+                    if (entryInner.Key != null && entryInner.Value != null)
+                    {
+                        Widget_WorkTab.SetWorkTabPriorities(p, entryInner.Key, entryInner.Value);
+                    }
                 }
             }
         }
@@ -261,7 +275,7 @@ namespace BetterPawnControl
         internal static void CopyToClipboard()
         {
             //Save state in case user has made changes to the active policy
-            WorkManager.SaveCurrentState(WorkManager.Colonists().ToList());
+            WorkManager.SaveCurrentState(WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList());
 
             Policy policy = GetActivePolicy();
             //if (WorkManager.clipboard != null)
@@ -289,7 +303,7 @@ namespace BetterPawnControl
                     copiedLink.zone = policy.id;
                     WorkManager.links.Add(copiedLink);
                 }
-                WorkManager.LoadState(links, Find.CurrentMap.mapPawns.FreeColonists.ToList(), policy);
+                WorkManager.LoadState(links, WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList(), policy);
             }
         }
 
@@ -317,3 +331,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

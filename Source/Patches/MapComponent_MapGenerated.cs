@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
     [HarmonyPatch(typeof(MapComponentUtility), nameof(MapComponent.MapGenerated))]
     static class MapGenerated
@@ -24,3 +24,5 @@ namespace BetterPawnControl.Patches
         }
     }
 }
+
+

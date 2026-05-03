@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,7 +6,7 @@ using System.Text;
 using HarmonyLib;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Widget_WeaponsTabReborn
@@ -130,3 +130,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

@@ -1,15 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
-    public class BetterPawnControlMod : Mod
+    public class BetterPawnControlForkedMod : Mod
     {
-        public static BetterPawnControlSettings Settings { get; set; }
+        public static BetterPawnControlForkedSettings Settings { get; set; }
 
-        public BetterPawnControlMod(ModContentPack content) : base(content)
+        public BetterPawnControlForkedMod(ModContentPack content) : base(content)
         {
-            Settings = GetSettings<BetterPawnControlSettings>();
+            Settings = GetSettings<BetterPawnControlForkedSettings>();
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -33,7 +33,9 @@ namespace BetterPawnControl
 
         public override string SettingsCategory()
         {
-            return "BPC.BetterPawnControl".Translate();
+            return "BPC.BetterPawnControlForked".Translate();
         }
     }
 }
+
+

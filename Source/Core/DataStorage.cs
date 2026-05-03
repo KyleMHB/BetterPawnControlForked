@@ -2,7 +2,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class DataStorage : WorldComponent
 	{
@@ -161,3 +161,5 @@ namespace BetterPawnControl
 		}
     }
 }
+
+

@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.SetGuestStatus))]
     static class Pawn_GuestTracker_SetGuestStatus
@@ -14,6 +14,10 @@ namespace BetterPawnControl
                 if (___pawn.IsFreeColonist && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
                 {
                     //became a new free colonist 
+                    AssignManager.SetDefaultsForFreeColonist(___pawn);
+                }
+                else if (PawnCompatibility.SupportsAssign(___pawn) && ___pawn.Faction == Faction.OfPlayer && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
+                {
                     AssignManager.SetDefaultsForFreeColonist(___pawn);
                 }
 
@@ -44,6 +48,10 @@ namespace BetterPawnControl
                 {
                     AssignManager.SetDefaultsForFreeColonist(p);
                 }
+                else if (PawnCompatibility.SupportsAssign(p) && p.Faction == Faction.OfPlayer)
+                {
+                    AssignManager.SetDefaultsForFreeColonist(p);
+                }
 
                 if (p.IsPrisoner)
                 {
@@ -58,3 +66,4 @@ namespace BetterPawnControl
         }
     }
 }
+

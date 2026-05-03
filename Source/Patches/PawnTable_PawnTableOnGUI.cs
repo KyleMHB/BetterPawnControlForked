@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using RimWorld;
@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
 
     [HarmonyPatch(typeof(PawnTable), nameof(PawnTable.PawnTableOnGUI))]
@@ -59,11 +59,11 @@ namespace BetterPawnControl.Patches
         {
             if (WorkManager.DirtyPolicy)
             {
-                WorkManager.LoadState(WorkManager.links, WorkManager.Colonists().ToList(), WorkManager.GetActivePolicy());
+                WorkManager.LoadState(WorkManager.links, WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList(), WorkManager.GetActivePolicy());
                 WorkManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_WorkTab(position, 5f, __instance.Size.y + 15f, WorkManager.Colonists().ToList());
+            DrawBPCButtons_WorkTab(position, 5f, __instance.Size.y + 15f, WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList());
         }
 
         private static void DrawAnimalBPCButtons(PawnTable __instance, Vector2 position)
@@ -88,7 +88,7 @@ namespace BetterPawnControl.Patches
 
             if (ScheduleManager.DirtyPolicy)
             {
-                ScheduleManager.LoadState(ScheduleManager.links, ScheduleManager.Colonists().ToList(), ScheduleManager.GetActivePolicy());
+                ScheduleManager.LoadState(ScheduleManager.links, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList(), ScheduleManager.GetActivePolicy());
                 ScheduleManager.DirtyPolicy = false;
             }
 
@@ -97,18 +97,18 @@ namespace BetterPawnControl.Patches
                 position.x += 87f;
             }
 
-            DrawBPCButtons_ScheduleTab(position, 5f, __instance.Size.y + 15f, ScheduleManager.Colonists().ToList());
+            DrawBPCButtons_ScheduleTab(position, 5f, __instance.Size.y + 15f, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList());
         }
 
         private static void DrawAssignBPCButtons(PawnTable __instance, Vector2 position)
         {
             if (AssignManager.DirtyPolicy)
             {
-                AssignManager.LoadState(AssignManager.links, AssignManager.Colonists().ToList(), AssignManager.GetActivePolicy());
+                AssignManager.LoadState(AssignManager.links, AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList(), AssignManager.GetActivePolicy());
                 AssignManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_AssignTab(position, 5f, __instance.Size.y + 15f, AssignManager.Colonists().ToList());
+            DrawBPCButtons_AssignTab(position, 5f, __instance.Size.y + 15f, AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList());
         }
 
         private static void DrawMechBPCButtons(PawnTable __instance, Vector2 position)
@@ -126,11 +126,11 @@ namespace BetterPawnControl.Patches
         {
             if (WeaponsManager.DirtyPolicy)
             {
-                WeaponsManager.LoadState(WeaponsManager.links, WeaponsManager.Colonists().ToList(), WeaponsManager.GetActivePolicy());
+                WeaponsManager.LoadState(WeaponsManager.links, WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList(), WeaponsManager.GetActivePolicy());
                 WeaponsManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_WeaponsTab(position, 5f, __instance.Size.y + 15f, WeaponsManager.Colonists().ToList());
+            DrawBPCButtons_WeaponsTab(position, 5f, __instance.Size.y + 15f, WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList());
         }
 
         private static void DrawMiscRobotsBPCButtons(PawnTable __instance, Vector2 position)
@@ -656,3 +656,5 @@ namespace BetterPawnControl.Patches
         }
     }
 }
+
+

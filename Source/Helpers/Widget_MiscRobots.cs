@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Widget_MiscRobots
@@ -47,3 +47,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

@@ -40,11 +40,12 @@
     <BPC.PasteSchedule>Programación de pegado</BPC.PasteSchedule>
 
     <BPC.ToggleEmergencyOn>Desactive la opción Emergencia. Las directivas se establecerán en la configuración anterior antes de la Emergencia</BPC.ToggleEmergencyOn>
-    <BPC.ToggleEmergencyOff>Active la opción Emergencia. Configure las directivas que se deben activar para todas las fichas en el engranaje de configuración de Better Pawn Control</BPC.ToggleEmergencyOff>
+    <BPC.ToggleEmergencyOff>Active la opción Emergencia. Configure las directivas que se deben activar para todas las fichas en el engranaje de configuración de Better Pawn Control Forked</BPC.ToggleEmergencyOff>
     <BPC.AlertConfigText>Configurar las directivas que se activan cuando la Emergencia está activada</BPC.AlertConfigText>
     <BPC.EmergencyLocationTooltip>El botón de emergencia está en la parte inferior derecha de la ventana del juego, junto a los botones de velocidad</BPC.EmergencyLocationTooltip>
 
-    <BPC.BetterPawnControlSettingsName>Better Pawn Control</BPC.BetterPawnControlSettingsName>
+    <BPC.BetterPawnControlForkedSettingsName>Better Pawn Control Forked</BPC.BetterPawnControlForkedSettingsName>
     <BPC.AutomaticPawnsInterruptSetting>¿Se interrumpe automáticamente lo que los peones están haciendo al alternar una Emergencia?</BPC.AutomaticPawnsInterruptSetting>
 
 </LanguageData>
+

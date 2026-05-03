@@ -1,8 +1,8 @@
-﻿using RimWorld;
+using RimWorld;
 using Verse;
-using static BetterPawnControl.BetterPawnControlMod;
+using static BetterPawnControlForked.BetterPawnControlForkedMod;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class AssignLink : Link, IExposable
     {
@@ -138,3 +138,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

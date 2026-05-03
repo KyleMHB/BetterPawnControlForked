@@ -1,10 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using HarmonyLib;
 using System;
 using Verse;
-using static BetterPawnControl.BetterPawnControlMod;
+using static BetterPawnControlForked.BetterPawnControlForkedMod;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     [StaticConstructorOnStartup]
     public static class Widget_ModsAvailable
@@ -26,7 +26,7 @@ namespace BetterPawnControl
 
         static Widget_ModsAvailable() 
         {
-            var harmony = new Harmony("VouLT.BetterPawnControl");
+            var harmony = new Harmony("KyleMHB.BetterPawnControlForked");
             harmony.PatchAll();
         }
 
@@ -127,3 +127,6 @@ namespace BetterPawnControl
         }
     }
 }
+
+
+

@@ -1,17 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Title>BetterPawnControl</Title>
-    <Description>BetterPawnControl RimWorld Mod</Description>
+    <AssemblyName>BetterPawnControlForked</AssemblyName>
+    <RootNamespace>BetterPawnControlForked</RootNamespace>
+    <Title>Better Pawn Control Forked</Title>
+    <Description>Better Pawn Control Forked RimWorld Mod</Description>
     <OutputPath>..\v1.6\Assemblies\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Copyright>Copyright © 2025</Copyright>
-    <RepositoryUrl>https://github.com/voult2/BetterPawnControl</RepositoryUrl>
+    <Copyright>Copyright � 2025</Copyright>
+    <RepositoryUrl>https://github.com/KyleMHB/BetterPawnControlForked</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>VouLT</Authors>
-    <Version>2.8.0</Version>
+    <Authors>KyleMHB</Authors>
+    <Version>2.8.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,3 +37,7 @@
   </ItemGroup>
 
 </Project>
+
+
+
+

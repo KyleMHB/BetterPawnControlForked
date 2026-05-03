@@ -1,7 +1,7 @@
-﻿using Verse;
-using static BetterPawnControl.BetterPawnControlMod;
+using Verse;
+using static BetterPawnControlForked.BetterPawnControlForkedMod;
 
-namespace BetterPawnControl.Helpers
+namespace BetterPawnControlForked.Helpers
 {
     public static class PawnExtensions
     {
@@ -18,3 +18,5 @@ namespace BetterPawnControl.Helpers
         }
     }
 }
+
+

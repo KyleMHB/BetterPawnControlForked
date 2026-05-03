@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     abstract class Manager<T>
 	{
@@ -35,7 +35,7 @@ namespace BetterPawnControl
 		{
 			try
 			{
-                return from p in Find.CurrentMap.mapPawns.PawnsInFaction(Faction.OfPlayer) where p.IsColonist select p;
+                return PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap);
 			}
 			catch (Exception) 
 			{ 
@@ -45,6 +45,11 @@ namespace BetterPawnControl
 
         internal static List<WorkGiverDef> GetWorkGivers(WorkTypeDef workType)
         {
+            if (workType == null)
+            {
+                return new List<WorkGiverDef>();
+            }
+
             if (workgivers.TryGetValue(workType, out var result))
                 return result;
 
@@ -262,4 +267,6 @@ namespace BetterPawnControl
         }
     }
 }
+
+
 

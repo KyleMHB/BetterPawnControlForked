@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     public class WorkLink : Link, IExposable
     {
@@ -18,11 +18,17 @@ namespace BetterPawnControl
         {
             this.zone = link.zone;
             this.colonist = link.colonist;
-            this.settings = new Dictionary<WorkTypeDef, int>(link.settings);
+            this.settings = link.settings != null
+                ? new Dictionary<WorkTypeDef, int>(link.settings)
+                : new Dictionary<WorkTypeDef, int>();
             this.mapId = link.mapId;
-            if (Widget_ModsAvailable.WorkTabAvailable)
+            if (Widget_ModsAvailable.WorkTabAvailable && link.settingsInner != null)
             {
                 this.settingsInner = new Dictionary<WorkGiverDef, List<int>>(link.settingsInner);                
+            }
+            else
+            {
+                this.settingsInner = new Dictionary<WorkGiverDef, List<int>>();
             }
         }
 
@@ -69,9 +75,9 @@ namespace BetterPawnControl
                 }
                 Scribe_Collections.Look(ref settings, "settings", LookMode.Def, LookMode.Value, ref keys, ref values);
 
-                if (Widget_ModsAvailable.WorkTabAvailable)
+                if (Widget_ModsAvailable.WorkTabAvailable && this.settingsInner != null)
                 {
-                    foreach (KeyValuePair<WorkGiverDef, List<int>> entryInner in this.settingsInner)
+                    foreach (KeyValuePair<WorkGiverDef, List<int>> entryInner in this.settingsInner.Where(x => x.Key != null && x.Value != null))
                     {
                         var prioritiesStr = string.Join(",", entryInner.Value);
                         keysInner.Add(entryInner.Key);
@@ -113,3 +119,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+

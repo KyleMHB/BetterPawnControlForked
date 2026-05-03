@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 
-namespace BetterPawnControl.Patches
+namespace BetterPawnControlForked.Patches
 {
     [HarmonyPatch(typeof(Dialog_ManageFoodPolicies), "GetDefaultPolicy")]
     static class Dialog_ManageFoodPolicies_GetDefaultPolicy
@@ -13,3 +13,5 @@ namespace BetterPawnControl.Patches
 
     }
 }
+
+

@@ -6,7 +6,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace BetterPawnControl
+namespace BetterPawnControlForked
 {
     internal static class OutfitStandsPlusCompatibility
     {
@@ -210,3 +210,5 @@ namespace BetterPawnControl
         }
     }
 }
+
+
