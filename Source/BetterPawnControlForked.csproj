@@ -8,6 +8,8 @@
     <Description>Better Pawn Control Forked RimWorld Mod</Description>
     <OutputPath>..\v1.6\Assemblies\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
     <Copyright>Copyright © 2025</Copyright>
     <RepositoryUrl>https://github.com/KyleMHB/BetterPawnControlForked</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
