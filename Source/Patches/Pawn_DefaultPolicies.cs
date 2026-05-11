@@ -16,7 +16,7 @@ namespace BetterPawnControlForked
                     //became a new free colonist 
                     AssignManager.SetDefaultsForFreeColonist(___pawn);
                 }
-                else if (PawnCompatibility.SupportsAssign(___pawn) && ___pawn.Faction == Faction.OfPlayer && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
+                else if (PawnCompatibility.SupportsAssign(___pawn) && ___pawn.Faction == PawnCompatibility.PlayerFaction && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
                 {
                     AssignManager.SetDefaultsForFreeColonist(___pawn);
                 }
@@ -48,7 +48,7 @@ namespace BetterPawnControlForked
                 {
                     AssignManager.SetDefaultsForFreeColonist(p);
                 }
-                else if (PawnCompatibility.SupportsAssign(p) && p.Faction == Faction.OfPlayer)
+                else if (PawnCompatibility.SupportsAssign(p) && p.Faction == PawnCompatibility.PlayerFaction)
                 {
                     AssignManager.SetDefaultsForFreeColonist(p);
                 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-11
+
+### Fixed
+
+- Prevented Better Pawn Control from logging repeated `Could not find player faction.` errors while RimWorld has no player faction during startup or early map setup.
+
 ## 2026-05-02
 
 ### Added

@@ -283,7 +283,13 @@ namespace BetterPawnControlForked
         {
             try
             {
-                return from p in Find.CurrentMap.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                var playerFaction = PawnCompatibility.PlayerFaction;
+                if (playerFaction == null)
+                {
+                    return new List<Pawn>();
+                }
+
+                return from p in Find.CurrentMap.mapPawns.PawnsInFaction(playerFaction)
                        where p.RaceProps.Animal
                        select p;
             }

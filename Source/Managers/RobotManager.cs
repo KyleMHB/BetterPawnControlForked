@@ -13,7 +13,13 @@ namespace BetterPawnControlForked
         {
             try
             {
-                var robots = from pawn in Find.CurrentMap.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                var playerFaction = PawnCompatibility.PlayerFaction;
+                if (playerFaction == null)
+                {
+                    return new List<Pawn>();
+                }
+
+                var robots = from pawn in Find.CurrentMap.mapPawns.PawnsInFaction(playerFaction)
                              where Widget_MiscRobots.IsPawnRobot(pawn)
                              select pawn;
                 return robots;

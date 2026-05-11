@@ -8,6 +8,8 @@ namespace BetterPawnControlForked
 {
     internal static class PawnCompatibility
     {
+        internal static Faction PlayerFaction => Faction.OfPlayerSilentFail;
+
         internal static List<Pawn> HumanlikePolicyPawns(Map map)
         {
             if (map?.mapPawns == null)
@@ -15,8 +17,12 @@ namespace BetterPawnControlForked
                 return new List<Pawn>();
             }
 
-            return map.mapPawns.PawnsInFaction(Faction.OfPlayer)
-                .Concat(map.mapPawns.PrisonersOfColonySpawned)
+            var playerFaction = PlayerFaction;
+            var factionPawns = playerFaction == null
+                ? Enumerable.Empty<Pawn>()
+                : map.mapPawns.PawnsInFaction(playerFaction);
+
+            return factionPawns.Concat(map.mapPawns.PrisonersOfColonySpawned)
                 .Where(IsHumanlikePolicyPawn)
                 .Distinct()
                 .ToList();
@@ -39,7 +45,7 @@ namespace BetterPawnControlForked
                 || pawn.IsPrisonerOfColony
                 || pawn.IsPrisoner
                 || pawn.IsSlave
-                || pawn.Faction == Faction.OfPlayer;
+                || pawn.Faction == PlayerFaction;
         }
 
         internal static bool SupportsAssign(Pawn pawn)
