@@ -1,95 +1,73 @@
-[h1]Better Pawn Control Forked[/h1]
+[h1]Description[/h1]
+Better Pawn Control Forked lets you save and switch colony policy presets for outfits, food, drugs, medicine, schedules, work priorities, allowed areas, animals, mechs, and supported loadout mods.
 
-Better Pawn Control lets you save sets of colony policies and switch between them. You can use it for outfits, food, drugs, medicine, schedules, work priorities, allowed areas, animals, mechs, and supported loadout mods.
+[b]Version 2.9.0[/b] automatically migrates presets from the original Better Pawn Control and older fork saves. It also preserves optional integration data when a mod is temporarily unavailable, fixes gravship policy transfers, and hardens pawn lifecycle handling for guests, prisoners, recruits, and slaves.
 
-[h1]2.9.0 save migration and gravship fixes[/h1]
-
-Version 2.9 automatically imports presets from the original Better Pawn Control and older fork saves. Work types, work givers, weapon presets, robot presets, and loadout data remain saved when an optional mod is temporarily unavailable.
-
-Pawn lifecycle handling is null-safe for recruitment, guests, prisoners, and slaves. Gravship moves now carry both pawn links and the active preset selection. Emergency presets use stable policy IDs and safely return to policy 0 if a selected preset was deleted.
-
-[b]Do not enable the original and fork together.[/b] The mod list marks them incompatible, and the fork disables its Harmony patches if both are forced active.
-
-[h1]So why is there a fork?[/h1]
-
-First, to clear up some confusion: [b]the original Better Pawn Control works on RimWorld 1.6.[/b] This is not an unofficial 1.6 update.
-
-I made this fork for a heavily modded game where I needed BPC to be less strict about what counts as a normal colonist, and less likely to fall over when another mod changes work types, pawn trackers, schedules, or apparel jobs.
-
-If the original works for your mod list, there is no reason you have to switch. The useful differences in this fork are the following:
-
-[list]
-[*][b]FSF Complex Jobs and custom work types[/b]
-
-The original Workshop page lists Complex Jobs and mods that expand jobs as incompatible. This fork only saves work types that are valid for the pawn, skips missing work types and work givers, and carries on if one of Work Tab's extended priorities cannot be read. One bad or removed entry should not stop the rest of the preset from loading.
-
-[*][b]Modded and DLC pawns[/b]
-
-Some humanlike pawns do not have all the trackers that a normal colonist has. Instead of assuming every pawn supports every BPC feature, this fork checks for the outfit, food, drug, reading, schedule, work, area, and medicine inventory trackers separately. A pawn is included in the parts it can actually use and skipped in the others.
-
-It also does not remove a valid modded pawn from a saved preset just because the pawn is not classed as a vanilla colonist.
-
-[*][b]Removed policies and schedule definitions[/b]
-
-Policies and schedule entries can disappear when mods are removed or changed. Where possible, this fork keeps the pawn's current valid policy instead of immediately replacing it with a default. Schedule entries are stored by name, and incomplete schedules or missing entries are repaired while loading.
-
-[*][b]Outfit Stands Plus Forked[/b]
-
-When a BPC outfit preset changes, the fork can send a pawn to their assigned outfit stand. It only does this if the stand is reachable and contains an outfit the pawn can wear under the new policy.
-
-It will not start the outfit stand job while the pawn already has a Defensive Positions, Gear Up And Go, wear-apparel, or remove-apparel job active or queued. It also leaves locked apparel alone.
-
-[*][b]Progression: Education[/b]
-
-Machado's Progression: Education compatibility patch is included in the fork. Class timetable changes are copied into BPC's default schedule preset. Switching to a different BPC schedule clears class-only assignments from the pawn's current timetable.
-
-[*][b]A few smaller fixes[/b]
-
-Schedule changes no longer call the pawn's tick method directly. The fork also handles missing pawn trackers in more places and avoids repeated player-faction errors during startup and early map loading.
-[/list]
-
-[b]Use the original or this fork, not both together.[/b]
+[b]Use the original mod or this fork, not both.[/b] The packages are marked incompatible, and this fork disables its Harmony patches if both are forced active.
 
 [h1]Features[/h1]
-
 [list]
-[*]Presets for outfits, food, drugs, reading, medicine, hostility response, schedules, allowed areas, and work priorities
-[*]Optional support for Work Tab's extended priorities
-[*]Animal, mech, robot, and supported loadout presets
-[*]Default policies for new colonists, prisoners, and slaves
-[*]An emergency button and keybind for switching your configured presets at once
+[*]Presets for outfits, food, drugs, reading, medicine, hostility response, schedules, allowed areas, and work priorities.
+[*]Optional support for Work Tab extended priorities and custom work types.
+[*]Animal, mech, robot, and supported loadout presets.
+[*]Default policies for new colonists, prisoners, and slaves.
+[*]An emergency button and keybind for applying configured presets at once.
+[*]Capability-based handling for DLC and modded humanlike pawns with nonstandard trackers.
+[*]Optional integration with Progression: Education and Outfit Stands Plus Forked.
 [/list]
 
-[h1]How to use it[/h1]
-
+[h1]How to Use[/h1]
 [list=1]
 [*]Open the Assign, Schedule, Work, Animals, Mechs, or Weapons tab.
 [*]Click the BPC cog to create or manage presets.
-[*]Select a preset with the button next to the cog.
+[*]Select a preset with the button beside the cog.
 [*]Change the normal RimWorld settings while that preset is active.
 [*]Select another preset when you want BPC to apply its saved settings.
 [/list]
 
-[h1]Requirements[/h1]
+[h1]Settings and Configuration[/h1]
+Use RimWorld's mod settings and the BPC controls in the supported game tabs to configure defaults, emergency policies, optional integrations, and preset behavior.
 
+[h1]Requirements and Dependencies[/h1]
 [list]
-[*]RimWorld 1.6
-[*]Harmony
+[*]RimWorld 1.6.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077]Harmony[/url].
 [/list]
 
-The fork contains specific compatibility work for FSF Complex Jobs, Progression: Education, Defensive Positions Forked, and Outfit Stands Plus Forked.
-
-[h1]Credits and source[/h1]
-
-This is a fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369]Better Pawn Control[/url] by VouLT. It inherits the original project's license, and the original contributors and translators deserve credit for the mod this is based on.
-
-Progression: Education support is based on Machado's [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3673605975]BetterPawnControl ProgressionEducation Patch[/url].
-
+[h1]Compatibility, Load Order, Multiplayer, and Save Safety[/h1]
 [list]
-[*][url=https://github.com/KyleMHB/BetterPawnControlForked]Fork source and issue tracker[/url]
-[*][url=https://github.com/voult2/BetterPawnControl]Original source[/url]
+[*][b]Load order:[/b] Load after Harmony and supported integration mods when applicable.
+[*][b]Custom work types:[/b] Missing work types and work givers are skipped without stopping the rest of a preset from loading.
+[*][b]Optional integrations:[/b] Includes defensive failure handling for Work Tab, Combat Extended, Compositable Loadouts, Progression: Education, FSF Complex Jobs, Defensive Positions Forked, and Outfit Stands Plus Forked.
+[*][b]Save migration:[/b] Version 2.9.0 migrates original-mod and older-fork policy data to the current schema.
+[*][b]Gravships and map moves:[/b] Pawn links and active policy selections move together.
 [/list]
 
-[h1]Forking policy[/h1]
+[h1]Fork History[/h1]
+Better Pawn Control was created by VouLT. The original already supports RimWorld 1.6; this fork is intended for heavily modded games that need more defensive handling around custom work types, nonstandard pawn trackers, schedules, optional integrations, and apparel jobs.
 
-If your fork mainly contains bug fixes or features that fit this project's purpose, I may ask you to submit those changes as a pull request instead of publishing another separate version.
+Compared with the original, this fork adds capability-based pawn handling, resilient work and schedule serialization, stable policy-ID migration, gravship transfer fixes, Progression: Education support, and guarded Outfit Stands Plus Forked integration. If the original works for your mod list, you do not need to switch.
+
+[h1]Credits[/h1]
+Original Better Pawn Control by VouLT. This fork is maintained by KyleMHB. Original contributors and translators remain credited for the project this fork is based on.
+
+Progression: Education support is based on Machado's BetterPawnControl ProgressionEducation Patch.
+
+[h1]License and Forking Policy[/h1]
+This fork inherits the original Better Pawn Control project's MIT license.
+
+If your fork primarily consists of bug fixes or feature additions that align with the core vision of this mod, I reserve the right to request that your changes be submitted as a Pull Request to my existing codebase rather than being published as a completely separate standalone release.
+
+This is a project request, not an additional restriction on the MIT license.
+
+[h1]Links[/h1]
+Support me on Ko-fi. This does not imply endorsement by the original authors.
+
+[url=https://ko-fi.com/I7L525WMJ6][img]https://img.shields.io/badge/Support_me_on_Ko--fi-72a4f2?style=for-the-badge&logo=kofi&logoColor=white[/img][/url]
+[url=https://github.com/KyleMHB/BetterPawnControlForked][img]https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white[/img][/url]
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3724294345]Better Pawn Control Forked on Steam Workshop[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369]Original Better Pawn Control on Steam Workshop[/url]
+[*][url=https://github.com/voult2/BetterPawnControl]Original source repository[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3673605975]BetterPawnControl ProgressionEducation Patch[/url]
+[/list]

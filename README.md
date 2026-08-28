@@ -69,7 +69,7 @@ Automated core and package checks run as part of `deploy.ps1`. The required in-g
 
 Version 2.9 automatically migrates original Better Pawn Control and pre-2.9 fork save data to schema 2. Keep only the original or the fork active, never both. Temporarily unavailable optional-mod records are retained and become usable again when their definitions return.
 
-## Contributing & Forking Policy
+## Contributing and Forking Policy
 
 > Contributions, issues, and feature requests are welcome.
 >
@@ -77,6 +77,11 @@ Version 2.9 automatically migrates original Better Pawn Control and pre-2.9 fork
 
 ## Links
 
+
+Support me on Ko-fi. This does not imply endorsement by the original authors.
+
+[![Support me on Ko-fi](https://img.shields.io/badge/Support_me_on_Ko--fi-72a4f2?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/I7L525WMJ6)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/KyleMHB/BetterPawnControlForked)
 - **Steam Workshop:** <http://steamcommunity.com/sharedfiles/filedetails/?id=3724294345>
 
 ## License
