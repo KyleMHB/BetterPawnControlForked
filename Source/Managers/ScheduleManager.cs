@@ -10,7 +10,7 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     class ScheduleManager : Manager<ScheduleLink>
     {
-        internal static List<ScheduleLink> clipboard = new List<ScheduleLink>();
+        internal static List<ScheduleLink> clipboard => DataStorage.GetFeature<ScheduleLink>().clipboard;
 
         internal static void FixActivePolicies()
         {
@@ -64,7 +64,7 @@ namespace BetterPawnControlForked
                 {
                     //find colonist in the current zone in the current map
                     ScheduleLink link = ScheduleManager.links.Find(
-                        x => x != null && x.colonist != null && p != null && p.Equals(x.colonist) &&
+                        x => x != null && x.colonist != null && p != null && PawnCompatibility.SamePawn(p, x.colonist) &&
                         x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
@@ -196,26 +196,7 @@ namespace BetterPawnControlForked
 
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!ScheduleManager.ActivePoliciesContainsValidMap())
-                {
-                    ScheduleManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static void UpdateState(List<ScheduleLink> links, List<Pawn> pawns, Policy policy)
@@ -238,7 +219,7 @@ namespace BetterPawnControlForked
 
                 foreach (ScheduleLink l in zoneLinks)
                 {
-                    if (l.colonist != null && PawnCompatibility.TryPawnKey(l.colonist, out var linkKey) && PawnCompatibility.TryPawnKey(p, out var pawnKey) && linkKey.Equals(pawnKey))
+                    if (l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p))
                     {
                         if (p.playerSettings != null)
                         {
@@ -272,7 +253,7 @@ namespace BetterPawnControlForked
                 var tick = false;
                 foreach (ScheduleLink l in zoneLinks)
                 {
-                    if (l.colonist != null && l.colonist.Equals(p))
+                    if (l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p))
                     {
                         if (p.playerSettings != null && p.playerSettings.AreaRestrictionInPawnCurrentMap != l.area)
                         {
@@ -284,7 +265,7 @@ namespace BetterPawnControlForked
                         {
                             l.RepairSchedule();
                             var updated = ScheduleManager.CopySchedule(l.schedule, p.timetable.times);
-                            tick = updated == true;
+                            tick |= updated;
                         }
                     }
                 }

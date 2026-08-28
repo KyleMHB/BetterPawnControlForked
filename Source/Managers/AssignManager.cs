@@ -10,10 +10,10 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     class AssignManager : Manager<AssignLink>
     {
-        internal static List<AssignLink> clipboard = new List<AssignLink>();
+        internal static List<AssignLink> clipboard => DataStorage.GetFeature<AssignLink>().clipboard;
 
 
-        internal static ApparelPolicy _defaultOutfit = null;
+        internal static ApparelPolicy _defaultOutfit { get => DataStorage.State.defaultOutfit; set => DataStorage.State.defaultOutfit = value; }
         internal static ApparelPolicy DefaultOutfit
         {
             get
@@ -32,7 +32,7 @@ namespace BetterPawnControlForked
             }
         }
 
-        internal static DrugPolicy _defaultDrugPolicy = null;
+        internal static DrugPolicy _defaultDrugPolicy { get => DataStorage.State.defaultDrugPolicy; set => DataStorage.State.defaultDrugPolicy = value; }
         internal static DrugPolicy DefaultDrugPolicy
         {
             get
@@ -51,7 +51,7 @@ namespace BetterPawnControlForked
         }
 
 
-        internal static FoodPolicy _defaultPrisonerFoodPolicy = null;
+        internal static FoodPolicy _defaultPrisonerFoodPolicy { get => DataStorage.State.defaultPrisonerFoodPolicy; set => DataStorage.State.defaultPrisonerFoodPolicy = value; }
         internal static FoodPolicy DefaultPrisonerFoodPolicy
         {
             get
@@ -95,7 +95,7 @@ namespace BetterPawnControlForked
             }
         }
 
-        internal static ApparelPolicy _defaultSlaveOutfit = null;
+        internal static ApparelPolicy _defaultSlaveOutfit { get => DataStorage.State.defaultSlaveOutfit; set => DataStorage.State.defaultSlaveOutfit = value; }
         internal static ApparelPolicy DefaultSlaveOutfit
         {
             get
@@ -114,7 +114,7 @@ namespace BetterPawnControlForked
             }
         }
 
-        internal static FoodPolicy _defaultSlaveFoodPolicy = null;
+        internal static FoodPolicy _defaultSlaveFoodPolicy { get => DataStorage.State.defaultSlaveFoodPolicy; set => DataStorage.State.defaultSlaveFoodPolicy = value; }
         internal static FoodPolicy DefaultSlaveFoodPolicy
         {
             get
@@ -132,7 +132,7 @@ namespace BetterPawnControlForked
             }
         }
 
-        internal static DrugPolicy _defaultSlaveDrugPolicy = null;
+        internal static DrugPolicy _defaultSlaveDrugPolicy { get => DataStorage.State.defaultSlaveDrugPolicy; set => DataStorage.State.defaultSlaveDrugPolicy = value; }
         internal static DrugPolicy DefaultSlaveDrugPolicy
         {
             get
@@ -150,7 +150,7 @@ namespace BetterPawnControlForked
             }
         }
 
-        internal static ReadingPolicy _defaultSlaveReadingPolicy = null;
+        internal static ReadingPolicy _defaultSlaveReadingPolicy { get => DataStorage.State.defaultSlaveReadingPolicy; set => DataStorage.State.defaultSlaveReadingPolicy = value; }
         internal static ReadingPolicy DefaultSlaveReadingPolicy
         {
             get
@@ -213,7 +213,7 @@ namespace BetterPawnControlForked
                 {                
                     //find colonist on the current zone in the current map
                     AssignLink link = AssignManager.links.Find(
-                        x => x != null && x.colonist != null  && p!= null && p.Equals(x.colonist) &&
+                        x => x != null && x.colonist != null  && p!= null && PawnCompatibility.SamePawn(p, x.colonist) &&
                         x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
@@ -383,26 +383,7 @@ namespace BetterPawnControlForked
 
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-                
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!AssignManager.ActivePoliciesContainsValidMap())
-                {
-                    AssignManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static void UpdateState(List<AssignLink> links, List<Pawn> pawns, Policy policy)
@@ -425,7 +406,7 @@ namespace BetterPawnControlForked
 
                 foreach (AssignLink l in zoneLinks)
                 {
-                    if (l.colonist != null && PawnCompatibility.TryPawnKey(l.colonist, out var linkKey) && PawnCompatibility.TryPawnKey(p, out var pawnKey) && linkKey.Equals(pawnKey))
+                    if (l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p))
                     {
                         if (p.playerSettings != null)
                         {
@@ -477,7 +458,7 @@ namespace BetterPawnControlForked
                     continue;
                 }
 
-                AssignLink link = zoneLinks.FirstOrDefault(l => l.colonist != null && PawnCompatibility.TryPawnKey(l.colonist, out var linkKey) && PawnCompatibility.TryPawnKey(p, out var pawnKey) && linkKey.Equals(pawnKey));
+                AssignLink link = zoneLinks.FirstOrDefault(l => l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p));
                 if (link != null)
                 {
                     ApplyLinkToPawn(p, link);

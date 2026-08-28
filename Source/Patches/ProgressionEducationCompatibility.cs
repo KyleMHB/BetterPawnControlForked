@@ -14,6 +14,8 @@ namespace BetterPawnControlForked.Patches
     {
         private const string PackageId = "ferny.ProgressionEducation";
         private const int DefaultClassPolicyId = 0;
+        private static bool disabled;
+        private static bool failureLogged;
 
         private static readonly Type TimeAssignmentUtilityType = AccessTools.TypeByName("ProgressionEducation.TimeAssignmentUtility");
         private static readonly MethodInfo IsStudyGroupAssignmentMethod = TimeAssignmentUtilityType == null
@@ -24,7 +26,7 @@ namespace BetterPawnControlForked.Patches
         {
             get
             {
-                return LoadedModManager.RunningModsListForReading.Any(
+                return !disabled && LoadedModManager.RunningModsListForReading.Any(
                     mod => string.Equals(mod.PackageId, PackageId, StringComparison.OrdinalIgnoreCase));
             }
         }
@@ -113,7 +115,7 @@ namespace BetterPawnControlForked.Patches
                     && l.zone == policyId
                     && l.mapId == mapId
                     && l.colonist != null
-                    && l.colonist.Equals(pawn));
+                    && PawnCompatibility.SamePawn(l.colonist, pawn));
 
             if (link != null)
             {
@@ -161,7 +163,7 @@ namespace BetterPawnControlForked.Patches
             }
             catch (Exception ex)
             {
-                Log.Warning("[BPC] ProgressionEducation assignment check failed. " + ex.Message);
+                Disable("assignment check failed", ex);
                 return false;
             }
         }
@@ -183,6 +185,20 @@ namespace BetterPawnControlForked.Patches
 
             return default(T);
         }
+
+        private static void Disable(string reason, Exception exception)
+        {
+            disabled = true;
+            if (failureLogged)
+            {
+                return;
+            }
+
+            failureLogged = true;
+            Log.Warning("[BPC] Progression: Education integration disabled: " + reason + ". " + exception.GetBaseException().Message);
+        }
+
+
     }
 
     [HarmonyPatch]

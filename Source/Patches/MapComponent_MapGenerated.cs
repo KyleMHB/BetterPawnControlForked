@@ -13,14 +13,8 @@ namespace BetterPawnControlForked.Patches
             WorkManager.ProcessNewMap(map);
             AnimalManager.ProcessNewMap(map);
             MechManager.ProcessNewMap(map);
-            if (Widget_ModsAvailable.WTBAvailable)
-            {
-                WeaponsManager.ProcessNewMap(map);
-            }
-            if (Widget_ModsAvailable.MiscRobotsAvailable)
-            {
-                RobotManager.ProcessNewMap(map);
-            }
+            WeaponsManager.ProcessNewMap(map);
+            RobotManager.ProcessNewMap(map);
         }
     }
 }

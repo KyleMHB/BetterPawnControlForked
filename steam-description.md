@@ -2,6 +2,14 @@
 
 Better Pawn Control lets you save sets of colony policies and switch between them. You can use it for outfits, food, drugs, medicine, schedules, work priorities, allowed areas, animals, mechs, and supported loadout mods.
 
+[h1]2.9.0 save migration and gravship fixes[/h1]
+
+Version 2.9 automatically imports presets from the original Better Pawn Control and older fork saves. Work types, work givers, weapon presets, robot presets, and loadout data remain saved when an optional mod is temporarily unavailable.
+
+Pawn lifecycle handling is null-safe for recruitment, guests, prisoners, and slaves. Gravship moves now carry both pawn links and the active preset selection. Emergency presets use stable policy IDs and safely return to policy 0 if a selected preset was deleted.
+
+[b]Do not enable the original and fork together.[/b] The mod list marks them incompatible, and the fork disables its Harmony patches if both are forced active.
+
 [h1]So why is there a fork?[/h1]
 
 First, to clear up some confusion: [b]the original Better Pawn Control works on RimWorld 1.6.[/b] This is not an unofficial 1.6 update.

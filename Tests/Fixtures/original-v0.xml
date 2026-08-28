@@ -1,0 +1,7 @@
+<feature dataVersion="0">
+  <policies><policy id="0" label="Auto" /><policy id="4" label="Raid" /></policies>
+  <links><link policyId="4" mapId="21" pawnKey="Pawn_1" /><link policyId="0" mapId="21" pawnKey="Pawn_2" /></links>
+  <active><selection mapId="21" policyId="4" /></active>
+  <workTypes><work defName="Firefighter" value="1" /><work defName="MissingOptionalWork" value="3" /></workTypes>
+  <workGivers><giver defName="MissingOptionalGiver" value="1,2,3" /></workGivers>
+</feature>

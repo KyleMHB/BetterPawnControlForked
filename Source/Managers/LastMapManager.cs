@@ -5,7 +5,7 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     internal static class LastMapManager
     {
-        static internal int lastMapId = -1;
+        static internal int lastMapId { get => DataStorage.State.lastMapId; set => DataStorage.State.lastMapId = value; }
 
         internal static void ForceInit()
         {

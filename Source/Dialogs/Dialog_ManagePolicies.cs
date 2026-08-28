@@ -55,24 +55,24 @@ namespace BetterPawnControlForked
         {
             sections.Clear();
 
-            sections.Add(PolicySection.Create(Resources.Type.work, ref WorkManager.policies));
-            sections.Add(PolicySection.Create(Resources.Type.restrict, ref ScheduleManager.policies));
-            sections.Add(PolicySection.Create(Resources.Type.assign, ref AssignManager.policies));
-            sections.Add(PolicySection.Create(Resources.Type.animal, ref AnimalManager.policies));
+            sections.Add(PolicySection.Create(Resources.Type.work, WorkManager.policies));
+            sections.Add(PolicySection.Create(Resources.Type.restrict, ScheduleManager.policies));
+            sections.Add(PolicySection.Create(Resources.Type.assign, AssignManager.policies));
+            sections.Add(PolicySection.Create(Resources.Type.animal, AnimalManager.policies));
             
             if (ModsConfig.BiotechActive)
             {
-                sections.Add(PolicySection.Create(Resources.Type.mech, ref MechManager.policies));
+                sections.Add(PolicySection.Create(Resources.Type.mech, MechManager.policies));
             }
 
             if (Widget_ModsAvailable.WTBAvailable)
             {
-                sections.Add(PolicySection.Create(Resources.Type.weapons, ref WeaponsManager.policies));
+                sections.Add(PolicySection.Create(Resources.Type.weapons, WeaponsManager.policies));
             }
 
             if (Widget_ModsAvailable.MiscRobotsAvailable)
             {
-                sections.Add(PolicySection.Create(Resources.Type.robots, ref RobotManager.policies));
+                sections.Add(PolicySection.Create(Resources.Type.robots, RobotManager.policies));
             }
 
             return sections.Count;
@@ -106,7 +106,7 @@ namespace BetterPawnControlForked
         }
 
         /// <summary>
-        /// Draw AnimalPolicys management table à lá vanilla
+        /// Draw AnimalPolicys management table ï¿½ lï¿½ vanilla
         /// </summary>
         public override void DoWindowContents(Rect inRect)
         {
@@ -278,7 +278,7 @@ namespace BetterPawnControlForked
                 {
                     Find.WindowStack.Add(new Dialog_RenamePolicy(policy, type));
                 }
-                if (policy.id > 0 && widgetRow.ButtonIcon(ContentFinder<Texture2D>.Get("UI/Buttons/Delete", true), null))
+                if (policy.id > 0 && widgetRow.ButtonIcon(Resources.Textures.Delete, null))
                 {
                     switch (type)
                     {
@@ -822,7 +822,7 @@ namespace BetterPawnControlForked
             public string NewButtonLabelKey { get; private set; }
             public List<Policy> Policies { get; private set; }
 
-            public static PolicySection Create(Resources.Type type, ref List<Policy> policies)
+            public static PolicySection Create(Resources.Type type, List<Policy> policies)
             {
                 var newSection = new PolicySection
                 {

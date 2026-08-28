@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
+using BetterPawnControlForked.CoreLogic;
 
 namespace BetterPawnControlForked
 {
@@ -154,6 +155,14 @@ namespace BetterPawnControlForked
             {
                 return false;
             }
+        }
+
+        internal static bool SamePawn(Pawn left, Pawn right)
+        {
+            return PawnIdentity.Same(left, right, pawn =>
+            {
+                return TryPawnKey(pawn, out var key) ? key : null;
+            });
         }
     }
 }

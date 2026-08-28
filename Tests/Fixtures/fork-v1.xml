@@ -1,0 +1,5 @@
+<feature dataVersion="1">
+  <policies><policy id="0" label="Auto" /><policy id="2" label="Night" /></policies>
+  <links><link policyId="2" mapId="8" pawnKey="Pawn_8" /></links>
+  <active><selection mapId="8" policyId="2" /></active>
+</feature>

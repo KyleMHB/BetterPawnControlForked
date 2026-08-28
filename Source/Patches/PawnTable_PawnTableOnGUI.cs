@@ -21,17 +21,17 @@ namespace BetterPawnControlForked.Patches
 
             if (___def == PawnTableDefOf.Assign)
             {
-                DrawAssignBPCButtons(__instance, position);
+                DrawAssignBPCButtons(__instance, position, PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap).Where(PawnCompatibility.SupportsAssign).ToList());
             }
 
             if (___def == PawnTableDefOf.Restrict)
             {
-                DrawSheduleBPCButtons(__instance, position);
+                DrawSheduleBPCButtons(__instance, position, PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap).Where(PawnCompatibility.SupportsSchedule).ToList());
             }
 
             if (___def == PawnTableDefOf.Work && !Widget_ModsAvailable.DisableBPCOnWorkTab)
             {
-                DrawWorkBPCButtons(__instance, position);
+                DrawWorkBPCButtons(__instance, position, PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap).Where(PawnCompatibility.SupportsWork).ToList());
             }
 
             if (___def == PawnTableDefOf.Animals || ___def.defName == NUMBERS_DEFNAME)
@@ -46,7 +46,7 @@ namespace BetterPawnControlForked.Patches
 
             if (___def.defName == WEAPONSTAB_DEFNAME && Widget_ModsAvailable.WTBAvailable)
             {
-                DrawWeaponsBPCButtons(__instance, position);
+                DrawWeaponsBPCButtons(__instance, position, PawnCompatibility.HumanlikePolicyPawns(Find.CurrentMap).Where(PawnCompatibility.SupportsWeapons).ToList());
             }
 
             if (___def.defName == MISCROBOTS_AIROBOTS_DEFNAME && Widget_ModsAvailable.MiscRobotsAvailable)
@@ -55,22 +55,23 @@ namespace BetterPawnControlForked.Patches
             }
         }
 
-        private static void DrawWorkBPCButtons(PawnTable __instance, Vector2 position)
+        private static void DrawWorkBPCButtons(PawnTable __instance, Vector2 position, List<Pawn> colonists)
         {
             if (WorkManager.DirtyPolicy)
             {
-                WorkManager.LoadState(WorkManager.links, WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList(), WorkManager.GetActivePolicy());
+                WorkManager.LoadState(WorkManager.links, colonists, WorkManager.GetActivePolicy());
                 WorkManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_WorkTab(position, 5f, __instance.Size.y + 15f, WorkManager.Colonists().Where(PawnCompatibility.SupportsWork).ToList());
+            DrawBPCButtons_WorkTab(position, 5f, __instance.Size.y + 15f, colonists);
         }
 
         private static void DrawAnimalBPCButtons(PawnTable __instance, Vector2 position)
         {
+            var animals = AnimalManager.Animals().ToList();
             if (AnimalManager.DirtyPolicy)
             {
-                AnimalManager.LoadState(AnimalManager.links, AnimalManager.Animals().ToList(), AnimalManager.GetActivePolicy());
+                AnimalManager.LoadState(AnimalManager.links, animals, AnimalManager.GetActivePolicy());
                 AnimalManager.DirtyPolicy = false;
             }
 
@@ -83,12 +84,12 @@ namespace BetterPawnControlForked.Patches
             DrawBPCButtons_AnimalTab(position, 5f, __instance.Size.y + 15f);
         }
 
-        private static void DrawSheduleBPCButtons(PawnTable __instance, Vector2 position)
+        private static void DrawSheduleBPCButtons(PawnTable __instance, Vector2 position, List<Pawn> colonists)
         {
 
             if (ScheduleManager.DirtyPolicy)
             {
-                ScheduleManager.LoadState(ScheduleManager.links, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList(), ScheduleManager.GetActivePolicy());
+                ScheduleManager.LoadState(ScheduleManager.links, colonists, ScheduleManager.GetActivePolicy());
                 ScheduleManager.DirtyPolicy = false;
             }
 
@@ -97,51 +98,53 @@ namespace BetterPawnControlForked.Patches
                 position.x += 87f;
             }
 
-            DrawBPCButtons_ScheduleTab(position, 5f, __instance.Size.y + 15f, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList());
+            DrawBPCButtons_ScheduleTab(position, 5f, __instance.Size.y + 15f, colonists);
         }
 
-        private static void DrawAssignBPCButtons(PawnTable __instance, Vector2 position)
+        private static void DrawAssignBPCButtons(PawnTable __instance, Vector2 position, List<Pawn> colonists)
         {
             if (AssignManager.DirtyPolicy)
             {
-                AssignManager.LoadState(AssignManager.links, AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList(), AssignManager.GetActivePolicy());
+                AssignManager.LoadState(AssignManager.links, colonists, AssignManager.GetActivePolicy());
                 AssignManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_AssignTab(position, 5f, __instance.Size.y + 15f, AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList());
+            DrawBPCButtons_AssignTab(position, 5f, __instance.Size.y + 15f, colonists);
         }
 
         private static void DrawMechBPCButtons(PawnTable __instance, Vector2 position)
         {
+            var mechs = MechManager.Mechs().ToList();
             if (MechManager.DirtyPolicy)
             {
-                MechManager.LoadState(MechManager.links, MechManager.Mechs().ToList(), MechManager.GetActivePolicy());
+                MechManager.LoadState(MechManager.links, mechs, MechManager.GetActivePolicy());
                 MechManager.DirtyPolicy = false;
             }
 
             DrawBPCButtons_MechTab(position, 5f, __instance.Size.y + 15f);
         }
 
-        private static void DrawWeaponsBPCButtons(PawnTable __instance, Vector2 position)
+        private static void DrawWeaponsBPCButtons(PawnTable __instance, Vector2 position, List<Pawn> colonists)
         {
             if (WeaponsManager.DirtyPolicy)
             {
-                WeaponsManager.LoadState(WeaponsManager.links, WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList(), WeaponsManager.GetActivePolicy());
+                WeaponsManager.LoadState(WeaponsManager.links, colonists, WeaponsManager.GetActivePolicy());
                 WeaponsManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_WeaponsTab(position, 5f, __instance.Size.y + 15f, WeaponsManager.Colonists().Where(PawnCompatibility.SupportsWeapons).ToList());
+            DrawBPCButtons_WeaponsTab(position, 5f, __instance.Size.y + 15f, colonists);
         }
 
         private static void DrawMiscRobotsBPCButtons(PawnTable __instance, Vector2 position)
         {
+            var robots = RobotManager.Robots().ToList();
             if (RobotManager.DirtyPolicy)
             {
-                RobotManager.LoadState(RobotManager.links, RobotManager.Robots().ToList(), RobotManager.GetActivePolicy());
+                RobotManager.LoadState(RobotManager.links, robots, RobotManager.GetActivePolicy());
                 RobotManager.DirtyPolicy = false;
             }
 
-            DrawBPCButtons_RobotsTab(position, 5f, __instance.Size.y + 15f, RobotManager.Robots().ToList());
+            DrawBPCButtons_RobotsTab(position, 5f, __instance.Size.y + 15f, robots);
         }
 
         private static void DrawBPCButtons_AssignTab(Vector2 position, float X_ExtraSpace, float Y_ExtraSpace, List<Pawn> colonists)
@@ -184,7 +187,7 @@ namespace BetterPawnControlForked.Patches
 
             offSetX += rect3.width;
             Rect rect5 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-            if (Widgets.ButtonImage(rect5, ContentFinder<Texture2D>.Get("UI/Buttons/Copy", true)))
+            if (Widgets.ButtonImage(rect5, Resources.Textures.Copy))
             {
                 AssignManager.CopyToClipboard();
                 SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
@@ -196,7 +199,7 @@ namespace BetterPawnControlForked.Patches
             {
                 offSetX += rect3.width;
                 Rect rect6 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-                if (Widgets.ButtonImage(rect6, ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true)))
+                if (Widgets.ButtonImage(rect6, Resources.Textures.Paste))
                 {
                     AssignManager.PasteToActivePolicy();
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera(null);
@@ -264,7 +267,7 @@ namespace BetterPawnControlForked.Patches
 
             offSetX += rect3.width;
             Rect rect5 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-            if (Widgets.ButtonImage(rect5, ContentFinder<Texture2D>.Get("UI/Buttons/Copy", true)))
+            if (Widgets.ButtonImage(rect5, Resources.Textures.Copy))
             {
                 ScheduleManager.CopyToClipboard();
                 SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
@@ -276,7 +279,7 @@ namespace BetterPawnControlForked.Patches
             {
                 offSetX += rect3.width;
                 Rect rect6 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-                if (Widgets.ButtonImage(rect6, ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true)))
+                if (Widgets.ButtonImage(rect6, Resources.Textures.Paste))
                 {
                     ScheduleManager.PasteToActivePolicy();
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera(null);
@@ -343,7 +346,7 @@ namespace BetterPawnControlForked.Patches
 
             offSetX += rect3.width;
             Rect rect5 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-            if (Widgets.ButtonImage(rect5, ContentFinder<Texture2D>.Get("UI/Buttons/Copy", true)))
+            if (Widgets.ButtonImage(rect5, Resources.Textures.Copy))
             {
                 WorkManager.CopyToClipboard();
                 SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
@@ -355,7 +358,7 @@ namespace BetterPawnControlForked.Patches
             {
                 offSetX += rect3.width;
                 Rect rect6 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-                if (Widgets.ButtonImage(rect6, ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true)))
+                if (Widgets.ButtonImage(rect6, Resources.Textures.Paste))
                 {
                     WorkManager.PasteToActivePolicy();
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera(null);
@@ -479,7 +482,7 @@ namespace BetterPawnControlForked.Patches
 
             offSetX += rect3.width;
             Rect rect5 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-            if (Widgets.ButtonImage(rect5, ContentFinder<Texture2D>.Get("UI/Buttons/Copy", true)))
+            if (Widgets.ButtonImage(rect5, Resources.Textures.Copy))
             {
                 MechManager.CopyToClipboard();
                 SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
@@ -491,7 +494,7 @@ namespace BetterPawnControlForked.Patches
             {
                 offSetX += rect3.width;
                 Rect rect6 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-                if (Widgets.ButtonImage(rect6, ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true)))
+                if (Widgets.ButtonImage(rect6, Resources.Textures.Paste))
                 {
                     MechManager.PasteToActivePolicy();
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera(null);
@@ -558,7 +561,7 @@ namespace BetterPawnControlForked.Patches
 
             offSetX += rect3.width;
             Rect rect5 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-            if (Widgets.ButtonImage(rect5, ContentFinder<Texture2D>.Get("UI/Buttons/Copy", true)))
+            if (Widgets.ButtonImage(rect5, Resources.Textures.Copy))
             {
                 WeaponsManager.CopyToClipboard();
                 SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
@@ -570,7 +573,7 @@ namespace BetterPawnControlForked.Patches
             {
                 offSetX += rect3.width;
                 Rect rect6 = new Rect(offSetX + 3f, rect3.height / 4f - 6f, 21f, 28f);
-                if (Widgets.ButtonImage(rect6, ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true)))
+                if (Widgets.ButtonImage(rect6, Resources.Textures.Paste))
                 {
                     WeaponsManager.PasteToActivePolicy();
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera(null);

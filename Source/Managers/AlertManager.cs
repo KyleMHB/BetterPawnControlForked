@@ -9,8 +9,8 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     internal static class AlertManager
     {
-        internal static List<AlertLevel> alertLevelsList = new List<AlertLevel>();
-        internal static int _alertLevel = 0;
+        internal static List<AlertLevel> alertLevelsList { get => DataStorage.State.alertLevels; set => DataStorage.State.alertLevels = value; }
+        internal static int _alertLevel { get => DataStorage.State.alertLevel; set => DataStorage.State.alertLevel = value; }
 
         //Only two levels supported for now (ON and OFF)
         internal static bool OnAlert
@@ -69,7 +69,9 @@ namespace BetterPawnControlForked
                 ForceInit();
             }
 
-            Policy alertPolicy = alertLevelsList.Find(x => x.level == level).settings.TryGetValue(type);
+            var selectedLevel = alertLevelsList.Find(x => x.level == level);
+            selectedLevel?.ResolvePolicies();
+            Policy alertPolicy = selectedLevel?.settings.TryGetValue(type);
 
             if (alertPolicy == null)
             {
@@ -112,11 +114,21 @@ namespace BetterPawnControlForked
 
         internal static void SetAlertPolicy(int level, Resources.Type type, Policy policy)
         {
-            alertLevelsList[level].settings[type] = policy;
+            var selectedLevel = alertLevelsList.Find(item => item.level == level);
+            if (selectedLevel != null)
+            {
+                selectedLevel.settings[type] = policy;
+                selectedLevel.RefreshPolicyIds();
+            }
         }
         internal static void SaveState(int level, Resources.Type type, Policy policy)
         {
-            alertLevelsList.Find(x => x.level == level).settings.SetOrAdd(type, policy);
+            var selectedLevel = alertLevelsList.Find(item => item.level == level);
+            if (selectedLevel != null)
+            {
+                selectedLevel.settings.SetOrAdd(type, policy);
+                selectedLevel.RefreshPolicyIds();
+            }
         }
 
         internal static void SaveState(int level)

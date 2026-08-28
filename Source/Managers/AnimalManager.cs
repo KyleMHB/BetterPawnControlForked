@@ -53,7 +53,7 @@ namespace BetterPawnControlForked
                     //find animal on the current zone
                     AnimalLink animalLink =
                         AnimalManager.links.Find(
-                            x => x != null && x.animal != null && p != null && p.Equals(x.animal) &&
+                            x => x != null && x.animal != null && p != null && PawnCompatibility.SamePawn(p, x.animal) &&
                             x.zone == AnimalManager.GetActivePolicy().id &&
                             x.mapId == currentMap);
 
@@ -144,7 +144,7 @@ namespace BetterPawnControlForked
 
                 foreach (AnimalLink l in zoneLinks)
                 {
-                    if (l.animal != null && l.animal.Equals(p))
+                    if (l.animal != null && PawnCompatibility.SamePawn(l.animal, p))
                     {
                         //found animal in zone. Update master if alive
                         p.playerSettings.Master = (l.master != null && l.master.Dead) ? null : l.master;
@@ -192,7 +192,7 @@ namespace BetterPawnControlForked
             {
                 foreach (AnimalLink l in zoneLinks)
                 {
-                    if (l.animal != null && l.animal.GetUniqueLoadID().Equals(p.GetUniqueLoadID()))
+                    if (l.animal != null && PawnCompatibility.SamePawn(l.animal, p))
                     {
                         l.master = p.playerSettings.Master;
                         l.followDrafted = p.playerSettings.followDrafted;
@@ -257,26 +257,7 @@ namespace BetterPawnControlForked
         }
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!AnimalManager.ActivePoliciesContainsValidMap())
-                {
-                    AnimalManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static IEnumerable<Pawn> Animals()

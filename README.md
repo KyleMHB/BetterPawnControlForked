@@ -51,28 +51,23 @@ Key settings and supported behaviors include:
 - capability-aware handling for DLC and modded pawns
 - Outfit Stands Plus Forked apparel policy triggering
 
-## Building from Source
+## Building and Packaging
 
-Prerequisites:
+Prerequisite: the .NET 8 SDK. All RimWorld, Harmony, and .NET Framework reference dependencies are restored at pinned versions.
 
-- .NET SDK compatible with the project
-- RimWorld reference files configured for the project
-
-Build the 1.6 assembly from the repository root:
+From the repository root:
 
 ```powershell
-dotnet build .\Source\BetterPawnControlForked.csproj -c Release /p:UseSharedCompilation=false
+.\deploy.ps1 -Version 2.9.0 -Configuration Release
 ```
 
-The compiled DLL is copied manually into `v1.6/Assemblies/BetterPawnControlForked.dll` when preparing a local mod package.
+The script restores, builds, tests, validates metadata and XML, and creates `artifacts/BetterPawnControlForked-2.9.0.zip`. It does not publish, tag, upload, or install the package.
 
 ## Testing and Validation
 
-The primary validation command is the Release build:
+Automated core and package checks run as part of `deploy.ps1`. The required in-game compatibility and profiling matrix is maintained in [TESTING.md](TESTING.md).
 
-```powershell
-dotnet build .\Source\BetterPawnControlForked.csproj -c Release /p:UseSharedCompilation=false
-```
+Version 2.9 automatically migrates original Better Pawn Control and pre-2.9 fork save data to schema 2. Keep only the original or the fork active, never both. Temporarily unavailable optional-mod records are retained and become usable again when their definitions return.
 
 ## Contributing & Forking Policy
 
@@ -82,7 +77,7 @@ dotnet build .\Source\BetterPawnControlForked.csproj -c Release /p:UseSharedComp
 
 ## Links
 
-- **Steam Workshop:** <http://steamcommunity.com/sharedfiles/filedetails/?id=1316142788>
+- **Steam Workshop:** <http://steamcommunity.com/sharedfiles/filedetails/?id=3724294345>
 
 ## License
 

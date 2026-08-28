@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.9.0 - 2026-08-28
+
+### Added
+
+- Added schema 2 migration for original Better Pawn Control and pre-2.9 fork saves, with one deterministic migration summary.
+- Added dependency-free core tests, pinned build dependencies, Windows validation workflow, and deterministic local ZIP packaging.
+- Added original-mod incompatibility metadata and runtime duplicate-patch protection.
+
+### Changed
+
+- Moved persistent policy, link, default, emergency, clipboard, and active-map state into the current world component.
+- Stored work types and Work Tab work givers by `defName`, retaining unresolved optional-mod records across saves.
+- Stored emergency selections by policy ID and fall back once to policy 0 when a selected policy was deleted.
+- Hardened Combat Extended, Compositable Loadouts, Work Tab, and Progression: Education reflection failures so only the affected integration disables.
+- Reduced pawn-table roster enumeration and cached immutable UI textures.
+
+### Fixed
+
+- Fixed null pawn links crashing guest, recruitment, faction-change, and slave lifecycle patches.
+- Fixed gravship and single-colony map transitions so links and active policy selections move together and replace stale destination defaults.
+- Fixed schedule interruption tracking so area and timetable changes accumulate.
+- Preserved weapons, robots, loadouts, and other optional feature data while integrations are unavailable.
+
+### Removed
+
+- Removed the stale root assembly, forced garbage collection, static persistent manager collections, and unused `Pawn.Tick` publicizer configuration.
+
+
 ## 2026-05-11
 
 ### Fixed

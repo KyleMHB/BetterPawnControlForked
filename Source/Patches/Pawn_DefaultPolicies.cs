@@ -4,66 +4,52 @@ using Verse;
 
 namespace BetterPawnControlForked
 {
-    [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.SetGuestStatus))]
-    static class Pawn_GuestTracker_SetGuestStatus
+    internal static class PawnLifecycleDefaults
     {
-        static void Postfix(Pawn ___pawn)
+        internal static void Apply(Pawn pawn)
         {
-            if (___pawn != null)
+            if (pawn == null)
             {
-                if (___pawn.IsFreeColonist && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
-                {
-                    //became a new free colonist 
-                    AssignManager.SetDefaultsForFreeColonist(___pawn);
-                }
-                else if (PawnCompatibility.SupportsAssign(___pawn) && ___pawn.Faction == PawnCompatibility.PlayerFaction && !AssignManager.links.Exists(x => ___pawn.Equals(x.colonist)))
-                {
-                    AssignManager.SetDefaultsForFreeColonist(___pawn);
-                }
-
-                if (___pawn.IsPrisoner)
-                {
-                    //former free colonist become prisoner
-                    AssignManager.SetDefaultsForPrisoner(___pawn);
-                }
-
-
-                if (___pawn.IsSlave)
-                {
-                    //former free colonist become a slave
-                    AssignManager.SetDefaultsForSlave(___pawn);
-                }
+                return;
             }
+
+            AssignManager.LinksCleanUp();
+            if (AssignManager.links.Exists(link => PawnCompatibility.SamePawn(pawn, link?.colonist)))
+            {
+                return;
+            }
+
+            if (pawn.IsSlave)
+            {
+                AssignManager.SetDefaultsForSlave(pawn);
+            }
+            else if (pawn.IsPrisoner)
+            {
+                AssignManager.SetDefaultsForPrisoner(pawn);
+            }
+            else if (pawn.IsFreeColonist
+                || (PawnCompatibility.SupportsAssign(pawn) && pawn.Faction == PawnCompatibility.PlayerFaction))
+            {
+                AssignManager.SetDefaultsForFreeColonist(pawn);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Pawn_GuestTracker), nameof(Pawn_GuestTracker.SetGuestStatus))]
+    internal static class Pawn_GuestTracker_SetGuestStatus
+    {
+        internal static void Postfix(Pawn ___pawn)
+        {
+            PawnLifecycleDefaults.Apply(___pawn);
         }
     }
 
     [HarmonyPatch(typeof(Faction), nameof(Faction.Notify_PawnJoined))]
-    static class Faction_Notify_PawnJoined
+    internal static class Faction_Notify_PawnJoined
     {
-        static void Postfix(Pawn p)
+        internal static void Postfix(Pawn p)
         {
-            if (p != null)
-            {
-                if (p.IsFreeColonist)
-                {
-                    AssignManager.SetDefaultsForFreeColonist(p);
-                }
-                else if (PawnCompatibility.SupportsAssign(p) && p.Faction == PawnCompatibility.PlayerFaction)
-                {
-                    AssignManager.SetDefaultsForFreeColonist(p);
-                }
-
-                if (p.IsPrisoner)
-                {
-                    AssignManager.SetDefaultsForPrisoner(p);
-                }
-
-                if (p.IsSlave) 
-                {
-                    AssignManager.SetDefaultsForSlave(p);
-                }
-            }
+            PawnLifecycleDefaults.Apply(p);
         }
     }
 }
-

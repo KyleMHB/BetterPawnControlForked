@@ -1,0 +1,36 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore, build, test, validate, and package
+        shell: pwsh
+        run: ./deploy.ps1 -Version 2.9.0 -Configuration Release
+
+      - name: Inspect release archive
+        shell: pwsh
+        run: |
+          $archive = Get-Item ./artifacts/BetterPawnControlForked-2.9.0.zip
+          if ($archive.Length -le 0) { throw "Release archive is empty." }
+          $zip = [IO.Compression.ZipFile]::OpenRead($archive.FullName)
+          try {
+            if ($zip.Entries.Count -eq 0) { throw "Release archive has no entries." }
+          }
+          finally {
+            $zip.Dispose()
+          }

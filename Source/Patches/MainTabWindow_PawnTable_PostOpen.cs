@@ -10,6 +10,7 @@ namespace BetterPawnControlForked
         static void Postfix(MainTabWindow_PawnTable __instance)
         {
             var windowType = __instance.GetType();
+            PawnTableSession.Open(windowType);
             
             if (windowType.Equals(typeof(MainTabWindow_Assign)))
             {

@@ -10,12 +10,14 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <Copyright>Copyright © 2025</Copyright>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <Copyright>Copyright Â© 2025-2026</Copyright>
     <RepositoryUrl>https://github.com/KyleMHB/BetterPawnControlForked</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>KyleMHB</Authors>
-    <Version>2.8.2</Version>
+    <Version>2.9.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,13 +32,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*" GeneratePathProperty="true" />
-    <PackageReference Include="Lib.Harmony" Version="2.3.6" ExcludeAssets="runtime" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" GeneratePathProperty="true" />
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Publicize Include="Assembly-CSharp:Verse.Pawn.Tick" />
-  </ItemGroup>
+
 
 </Project>
 

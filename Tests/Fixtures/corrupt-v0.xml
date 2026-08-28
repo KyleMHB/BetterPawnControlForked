@@ -1,0 +1,5 @@
+<feature dataVersion="0">
+  <policies><policy id="2" label="First" /><policy id="2" label="Duplicate" /></policies>
+  <links><link policyId="2" mapId="3" pawnKey="" /><link policyId="99" mapId="3" pawnKey="Pawn_3" /><link policyId="2" mapId="3" pawnKey="Pawn_4" /></links>
+  <active><selection mapId="3" policyId="99" /><selection mapId="3" policyId="2" /></active>
+</feature>

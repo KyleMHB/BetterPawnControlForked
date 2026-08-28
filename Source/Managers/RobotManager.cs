@@ -73,7 +73,7 @@ namespace BetterPawnControlForked
                 {
                     // find robot in the current zone
                     RobotLink link = links.Find(
-                        x => x != null && p != null && p.Equals(x.robot) &&
+                        x => x != null && p != null && PawnCompatibility.SamePawn(p, x.robot) &&
                         x.zone == GetActivePolicy().id &&
                         x.mapId == currentMap);
 
@@ -150,26 +150,7 @@ namespace BetterPawnControlForked
 
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!RobotManager.ActivePoliciesContainsValidMap())
-                {
-                    RobotManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         private static void DeleteMap(MapActivePolicy map)

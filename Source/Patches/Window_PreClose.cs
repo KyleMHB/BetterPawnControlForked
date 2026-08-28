@@ -52,6 +52,8 @@ namespace BetterPawnControlForked.Patches
                 RobotManager.SaveCurrentState(RobotManager.Robots().ToList());
                 RobotManager.LinksCleanUp();
             }
+
+            PawnTableSession.Close(__instance.GetType());
         }
     }
 }

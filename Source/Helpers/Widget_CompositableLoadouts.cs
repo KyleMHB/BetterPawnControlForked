@@ -8,94 +8,105 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     public static class Widget_CompositableLoadouts
     {
-        private const string PF_MOD_NAME = "Compositable Loadouts";
-        private const string PF_TYPE_UTILS = "Inventory.BetterPawnControlForked";
+        private const string DisplayNameOnly = "Compositable Loadouts";
+        private const string DisplayName = DisplayNameOnly;
+        private const string UtilityType = "Inventory.BetterPawnControlForked";
+        private const BindingFlags AllBindings = (BindingFlags)60;
 
-        private const string PF_METHOD_GETLOADOUT = "GetLoadoutId";
-        private const string PF_METHOD_SETLOADOUT = "SetLoadoutById";
-
-        // public + private + static + instance;
-        private const BindingFlags BINDINGDLAGS_ALL = (BindingFlags)60;
-
-        private static bool _anyError = false;
-        private static bool _initialized = false;
-        private static bool _available = false;
-
-        private static MethodInfo _hasGetLoadoutId;
-        private static MethodInfo _hasSetLoadoutById;
-
-        public static object compositableLoadoutsClassInstance;
+        private static bool initialized;
+        private static bool available;
+        private static bool failureLogged;
+        private static MethodInfo getLoadoutId;
+        private static MethodInfo setLoadoutById;
 
         public static bool CompositableLoadoutsAvailable
         {
             get
             {
-                if (!_initialized)
+                if (!initialized)
+                {
                     Initialize();
-                return (_available && !_anyError);
+                }
+                return available;
             }
         }
 
         private static void Initialize()
         {
-            _available = LoadedModManager.RunningMods.Any(mod => mod.Name == PF_MOD_NAME);
-
-            _initialized = true;
-            if (_available)
+            initialized = true;
+            var mod = LoadedModManager.RunningModsListForReading.FirstOrDefault(item => item.Name == DisplayName);
+            if (mod == null)
             {
-                try
+                return;
+            }
+
+            try
+            {
+                var assembly = mod.assemblies.loadedAssemblies.FirstOrDefault(item => item.GetName().Name == "Inventory");
+                var utility = assembly?.GetType(UtilityType);
+                getLoadoutId = utility?.GetMethod("GetLoadoutId", AllBindings);
+                setLoadoutById = utility?.GetMethod("SetLoadoutById", AllBindings);
+                available = getLoadoutId != null && setLoadoutById != null;
+                if (!available)
                 {
-                    //get the assembly
-                    var PF_assembly = LoadedModManager
-                                        .RunningMods.First(mod => mod.Name == PF_MOD_NAME)
-                                        .assemblies.loadedAssemblies.Where(asm => asm.GetName().Name == "Inventory").FirstOrDefault(); //thanks to Deno226
-
-                    if (PF_assembly == null)
-                    {
-                        throw new Exception(
-                            "[BPC] Compositable Loadouts assembly not found.");
-                    }
-
-                    var PF_UtilsType = PF_assembly.GetType(PF_TYPE_UTILS);
-                    if (PF_UtilsType == null)
-                    {
-                        throw new Exception("[BPC] Compositable Loadouts type not found: " + PF_TYPE_UTILS);
-                    }
-
-                    _hasGetLoadoutId = PF_UtilsType.GetMethod(PF_METHOD_GETLOADOUT, BINDINGDLAGS_ALL);
-                    if (_hasGetLoadoutId == null)
-                    {
-                        throw new Exception(
-                            "[BPC] Compositable Loadouts method not found: " + PF_METHOD_GETLOADOUT);
-                    }
-
-                    _hasSetLoadoutById = PF_UtilsType.GetMethod(PF_METHOD_SETLOADOUT, BINDINGDLAGS_ALL);
-                    if (_hasSetLoadoutById == null)
-                    {
-                        throw new Exception("[BPC] Compositable Loadouts method not found: " + PF_METHOD_SETLOADOUT);
-                    }
-
-                    Log.Message("[BPC] Compositable Loadouts functionality integrated");
+                    Disable("required type or methods were not found", null);
+                    return;
                 }
-                catch
-                {
-                    _anyError = true;
-                    Log.Error("[BPC] Error in Compositable Loadouts integration - functionality disabled");
-                    throw;
-                }
+
+                Log.Message("[BPC] Compositable Loadouts functionality integrated");
+            }
+            catch (Exception exception)
+            {
+                Disable("binding failed", exception);
             }
         }
 
         public static int GetLoadoutId(Pawn pawn)
         {
-            return (int)_hasGetLoadoutId.Invoke(null, new object[] { pawn });
+            if (!CompositableLoadoutsAvailable)
+            {
+                return -1;
+            }
+
+            try
+            {
+                return (int)getLoadoutId.Invoke(null, new object[] { pawn });
+            }
+            catch (Exception exception)
+            {
+                Disable("loadout read failed", exception);
+                return -1;
+            }
         }
 
         public static void SetLoadoutById(Pawn pawn, int id)
         {
-            _hasSetLoadoutById.Invoke(null, new object[] { pawn, id });
+            if (!CompositableLoadoutsAvailable)
+            {
+                return;
+            }
+
+            try
+            {
+                setLoadoutById.Invoke(null, new object[] { pawn, id });
+            }
+            catch (Exception exception)
+            {
+                Disable("loadout apply failed", exception);
+            }
         }
 
+        private static void Disable(string reason, Exception exception)
+        {
+            available = false;
+            if (failureLogged)
+            {
+                return;
+            }
+
+            failureLogged = true;
+            Log.Warning("[BPC] Compositable Loadouts integration disabled: " + reason
+                + (exception == null ? string.Empty : ". " + exception.GetBaseException().Message));
+        }
     }
 }
-

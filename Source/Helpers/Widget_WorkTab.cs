@@ -13,6 +13,7 @@ namespace BetterPawnControlForked
     public static class Widget_WorkTab
     {
         private static bool init = false;
+        private static bool failureLogged = false;
 
         private static Type pawnExtensions;
         private static MethodInfo getPriorities;
@@ -119,7 +120,7 @@ namespace BetterPawnControlForked
             }
             catch (Exception ex)
             {
-                Log.Warning("[BPC] Work Tab priority read failed for " + pawn.ToStringSafe() + " / " + workGiver.defName + ". " + ex.Message);
+                Disable("priority read failed", ex);
                 return null;
             }
         }
@@ -153,9 +154,22 @@ namespace BetterPawnControlForked
             }
             catch (Exception ex)
             {
-                Log.Warning("[BPC] Work Tab priority apply failed for " + pawn.ToStringSafe() + " / " + workGiver.defName + ". " + ex.Message);
+                Disable("priority apply failed", ex);
             }
         }
+
+        private static void Disable(string reason, Exception exception)
+        {
+            init = false;
+            if (failureLogged)
+            {
+                return;
+            }
+
+            failureLogged = true;
+            Log.Warning("[BPC] Work Tab integration disabled: " + reason + ". " + exception.GetBaseException().Message);
+        }
+
     }
 }
 

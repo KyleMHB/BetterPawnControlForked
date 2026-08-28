@@ -9,7 +9,7 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     class WorkManager : Manager<WorkLink>
     {
-        internal static List<WorkLink> clipboard = new List<WorkLink>();
+        internal static List<WorkLink> clipboard => DataStorage.GetFeature<WorkLink>().clipboard;
 
         internal static void DeletePolicy(Policy policy)
         {
@@ -56,7 +56,7 @@ namespace BetterPawnControlForked
                 {
                     //find colonist in the current zone in the current map
                     WorkLink link = WorkManager.links.Find(
-                        x => x != null && x.colonist != null && p != null && p.Equals(x.colonist) &&
+                        x => x != null && x.colonist != null && p != null && PawnCompatibility.SamePawn(p, x.colonist) &&
                         x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
@@ -149,26 +149,7 @@ namespace BetterPawnControlForked
 
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!WorkManager.ActivePoliciesContainsValidMap())
-                {
-                    WorkManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static void LoadState(List<WorkLink> links, List<Pawn> pawns, Policy policy)
@@ -191,7 +172,7 @@ namespace BetterPawnControlForked
 
                 foreach (WorkLink l in zoneLinks)
                 {
-                    if (l.colonist != null && l.colonist.Equals(p))
+                    if (l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p))
                     {
                         WorkManager.LoadPawnPriorities(p, l);
                     }

@@ -10,7 +10,7 @@ namespace BetterPawnControlForked
 
     class MechManager : Manager<MechLink>
     {
-        internal static List<MechLink> clipboard = new List<MechLink>();
+        internal static List<MechLink> clipboard => DataStorage.GetFeature<MechLink>().clipboard;
 
         internal static void DeletePolicy(Policy policy)
         {
@@ -57,7 +57,7 @@ namespace BetterPawnControlForked
                     //find mech on the current zone
                     MechLink MechLink =
                         MechManager.links.Find(
-                            x => x != null && x.mech != null && p != null && p.Equals(x.mech) &&
+                            x => x != null && x.mech != null && p != null && PawnCompatibility.SamePawn(p, x.mech) &&
                             x.zone == MechManager.GetActivePolicy().id &&
                             x.mapId == currentMap);
 
@@ -127,7 +127,7 @@ namespace BetterPawnControlForked
                 {
                     foreach (MechLink l in zoneLinks)
                     {
-                        if (l.mech != null && l.mech.Equals(p))
+                        if (l.mech != null && PawnCompatibility.SamePawn(l.mech, p))
                         {
                             //found mech in zone. Load state
                             foreach (MechanitorControlGroup group in p.GetMechControlGroup().Tracker.controlGroups)
@@ -172,7 +172,7 @@ namespace BetterPawnControlForked
                     {
                         foreach (MechLink l in zoneLinks)
                         {
-                            if (l.mech != null && l.mech.GetUniqueLoadID().Equals(p.GetUniqueLoadID()))
+                            if (l.mech != null && PawnCompatibility.SamePawn(l.mech, p))
                             {
                                 l.controlGroupIndex = p.GetMechControlGroup().Index;
                                 l.workmode = p.GetMechControlGroup().WorkMode;
@@ -239,26 +239,7 @@ namespace BetterPawnControlForked
 
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!MechManager.ActivePoliciesContainsValidMap())
-                {
-                    MechManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static IEnumerable<Pawn> Mechs()

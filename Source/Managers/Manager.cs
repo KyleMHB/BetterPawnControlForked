@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
+using BetterPawnControlForked.CoreLogic;
 
 namespace BetterPawnControlForked
 {
-    abstract class Manager<T>
+    abstract class Manager<T> where T : Link
 	{
-		internal static List<Policy> policies = new List<Policy>();
-		internal static List<MapActivePolicy> activePolicies = new List<MapActivePolicy>();
-		internal static List<T> links = new List<T>();
-		internal static bool showPaste = false;
-        internal static Dictionary<WorkTypeDef, List<WorkGiverDef>> workgivers = new Dictionary<WorkTypeDef, List<WorkGiverDef>>();
-        
-		static Manager()
+        private static FeatureState<T> Feature => DataStorage.GetFeature<T>();
+
+        internal static List<Policy> policies { get => Feature.policies; set => Feature.policies = value; }
+        internal static List<MapActivePolicy> activePolicies { get => Feature.activePolicies; set => Feature.activePolicies = value; }
+        internal static List<T> links { get => Feature.links; set => Feature.links = value; }
+        internal static bool showPaste { get => Feature.showPaste; set => Feature.showPaste = value; }
+        internal static Dictionary<WorkTypeDef, List<WorkGiverDef>> workgivers { get => Feature.workgivers; set => Feature.workgivers = value; }
+
+        static Manager()
         {
-            Policy defaultPolicy = new Policy(policies.Count, "BPC.Auto".Translate());
-            policies.Add(defaultPolicy);
-            activePolicies.Add(new MapActivePolicy(0, defaultPolicy));
+            Feature.EnsureInitialized();
         }
 
         internal static void ForceInit()
         {
-            policies = new List<Policy>();
-            activePolicies = new List<MapActivePolicy>();
-            links = new List<T>();
-            Policy defaultPolicy = new Policy(policies.Count, "BPC.Auto".Translate());
-            policies.Add(defaultPolicy);
-            activePolicies.Add(new MapActivePolicy(0, defaultPolicy));
+            Feature.Reset();
         }
 
 		internal static IEnumerable<Pawn> Colonists()
@@ -61,19 +57,11 @@ namespace BetterPawnControlForked
 			return list;
         }
 
-        private static bool _dirtyPolicy = false;
-		public static bool DirtyPolicy
-		{
-			get
-			{
-				return _dirtyPolicy;
-			}
-
-			set
-			{
-				_dirtyPolicy = value;
-			}
-		}
+        public static bool DirtyPolicy
+        {
+            get => Feature.dirtyPolicy;
+            set => Feature.dirtyPolicy = value;
+        }
 
 		internal static Policy GetActivePolicy()
 		{
@@ -140,65 +128,42 @@ namespace BetterPawnControlForked
 				return;
 			}
 
-			foreach (T link in links)
-			{
-				if (link.GetType() == typeof(WorkLink))
-				{
-					if (link.ChangeType<WorkLink>().mapId == srcMapId)
-					{
-                        link.ChangeType<WorkLink>().mapId = dstMapId;
-                    }
-				}
-
-				if (link.GetType() == typeof(ScheduleLink))
-				{
-                    if (link.ChangeType<ScheduleLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<ScheduleLink>().mapId = dstMapId;
-                    }
-                }
-
-				if (link.GetType() == typeof(AssignLink))
-				{
-                    if (link.ChangeType<AssignLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<AssignLink>().mapId = dstMapId;
-                    }
-                }
-
-				if (link.GetType() == typeof(AnimalLink))
-				{
-                    if (link.ChangeType<AnimalLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<AnimalLink>().mapId = dstMapId;
-                    }
-                }
-
-				if (link.GetType() == typeof(MechLink))
-				{
-                    if (link.ChangeType<MechLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<MechLink>().mapId = dstMapId;
-                    }
-                }
-
-                if (link.GetType() == typeof(RobotLink))
-                {
-                    if (link.ChangeType<RobotLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<RobotLink>().mapId = dstMapId;
-                    }
-                }
-                
-				if (link.GetType() == typeof(WeaponsLink))
-                {
-                    if (link.ChangeType<WeaponsLink>().mapId == srcMapId)
-                    {
-                        link.ChangeType<WeaponsLink>().mapId = dstMapId;
-                    }
-                }
+			foreach (T link in links.Where(link => link != null && link.mapId == srcMapId))
+            {
+                link.mapId = dstMapId;
             }
+
+            var transferPlan = MapStateTransfer.Plan(activePolicies.Select(item => item.mapId).ToList(), srcMapId, dstMapId);
+            if (!transferPlan.ShouldTransfer)
+            {
+                return;
+            }
+
+            var source = activePolicies[transferPlan.SourceSelectionIndex];
+            for (var index = transferPlan.DestinationSelectionIndexes.Count - 1; index >= 0; index--)
+            {
+                activePolicies.RemoveAt(transferPlan.DestinationSelectionIndexes[index]);
+            }
+            source.mapId = dstMapId;
 		}
+
+        internal static void ProcessNewMapTransition(Map newMap)
+        {
+            if (newMap == null || !newMap.IsPlayerHome || LastMapManager.lastMapId < 0)
+            {
+                return;
+            }
+
+            bool anotherPlayerHomeHasState = Find.Maps.Any(map =>
+                map != null && map != newMap && map.IsPlayerHome
+                && activePolicies.Any(selection => selection.mapId == map.uniqueID));
+            if (anotherPlayerHomeHasState || !activePolicies.Any(selection => selection.mapId == LastMapManager.lastMapId))
+            {
+                return;
+            }
+
+            MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
+        }
 
 		internal static bool FoodPolicyExists(FoodPolicy foodPolicy)
 		{
@@ -217,7 +182,7 @@ namespace BetterPawnControlForked
 			return false;
 		}
 
-		internal static FoodPolicy _defaultFoodPolicy = null;
+		internal static FoodPolicy _defaultFoodPolicy { get => Feature.defaultFoodPolicy; set => Feature.defaultFoodPolicy = value; }
 		internal static FoodPolicy DefaultFoodPolicy
 		{
 			get
@@ -235,7 +200,7 @@ namespace BetterPawnControlForked
 			}
 		}
 
-		internal static ReadingPolicy _defaultReadingPolicy = null;
+		internal static ReadingPolicy _defaultReadingPolicy { get => Feature.defaultReadingPolicy; set => Feature.defaultReadingPolicy = value; }
 		internal static ReadingPolicy DefaultReadingPolicy
 		{
 			get

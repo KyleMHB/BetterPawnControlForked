@@ -8,9 +8,9 @@ namespace BetterPawnControlForked
     [StaticConstructorOnStartup]
     class WeaponsManager : Manager<WeaponsLink>
     {
-        internal static int _defaultLoadoutId = -1;
+        internal static int _defaultLoadoutId { get => DataStorage.State.defaultLoadoutId; set => DataStorage.State.defaultLoadoutId = value; }
 
-        internal static List<WeaponsLink> clipboard = new List<WeaponsLink>();
+        internal static List<WeaponsLink> clipboard => DataStorage.GetFeature<WeaponsLink>().clipboard;
         internal static int DefaultWeaponsLoadoutById
         {
             get
@@ -70,7 +70,7 @@ namespace BetterPawnControlForked
 
                 WeaponsLink weaponLink =
                     WeaponsManager.links.Find(
-                        x => x != null && x.colonist != null && p != null && p.Equals(x.colonist) &&
+                        x => x != null && x.colonist != null && p != null && PawnCompatibility.SamePawn(p, x.colonist) &&
                         x.zone == activePolicyId &&
                         x.mapId == currentMap);
 
@@ -127,7 +127,7 @@ namespace BetterPawnControlForked
 
                 foreach (WeaponsLink l in zoneLinks)
                 {
-                    if (l.colonist != null && l.colonist.Equals(p))
+                    if (l.colonist != null && PawnCompatibility.SamePawn(l.colonist, p))
                     {
                         Widget_WeaponsTabReborn.SetLoadoutId(p, l.loadoutId);
                     }
@@ -191,26 +191,7 @@ namespace BetterPawnControlForked
         }
         internal static void ProcessNewMap(Map newMap)
         {
-            if (Find.Maps.Count > 1)
-            {
-                //Player has a base and arrived at a new map or got in a incident in a new map with caravan
-                //BCP will create a new map in the MapActivePolicy list. Nothing to do here.
-
-            }
-            else if (Find.Maps.Count == 1)
-            {
-                //Player has no base and just arrived in a new map via caravan or via GravShip.
-                //So let us move all links from the old and last map and then delete the old map
-                if (!WeaponsManager.ActivePoliciesContainsValidMap())
-                {
-                    WeaponsManager.MoveLinksToMap(LastMapManager.lastMapId, newMap.uniqueID);
-                }
-            }
-            else
-            {
-                //this makes no sense
-                Log.Warning("[BPC] This code shouldn't have ran");
-            }
+            ProcessNewMapTransition(newMap);
         }
 
         internal static void CopyToClipboard()

@@ -15,14 +15,8 @@ namespace BetterPawnControlForked.Patches
             WorkManager.CleanRemovedMaps(map);
             AnimalManager.CleanRemovedMaps(map);
             MechManager.CleanRemovedMaps(map);
-            if (Widget_ModsAvailable.WTBAvailable)
-            {
-                WeaponsManager.CleanRemovedMaps(map);
-            }
-            if (Widget_ModsAvailable.MiscRobotsAvailable)
-            {
-                RobotManager.CleanRemovedMaps(map);
-            }
+            WeaponsManager.CleanRemovedMaps(map);
+            RobotManager.CleanRemovedMaps(map);
         }
     }
 }

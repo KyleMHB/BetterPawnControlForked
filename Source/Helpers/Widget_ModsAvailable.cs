@@ -10,7 +10,9 @@ namespace BetterPawnControlForked
     public static class Widget_ModsAvailable
     {
         private const string WORKTAB = "Work Tab";
+        private const string WORKTAB_PACKAGE_ID = "Fluffy.WorkTab";
         private const string ANIMALTAB= "Animal Tab";
+        private const string ANIMALTAB_PACKAGE_ID = "Fluffy.AnimalTab";
         private const string CSL = "Children, school and learning";
         private const string AAF = "Assign Animal Food";
         private const string WTB = "[1001]Weapons Tab Reborn";
@@ -26,6 +28,12 @@ namespace BetterPawnControlForked
 
         static Widget_ModsAvailable() 
         {
+            if (LoadedModManager.RunningModsListForReading.Any(mod => string.Equals(mod.PackageId, "VouLT.BetterPawnControl", StringComparison.OrdinalIgnoreCase)))
+            {
+                Log.Error("[BPC] Original Better Pawn Control and Better Pawn Control Forked are both active. Fork patches are disabled to prevent duplicate behavior.");
+                return;
+            }
+
             var harmony = new Harmony("KyleMHB.BetterPawnControlForked");
             harmony.PatchAll();
         }
@@ -34,7 +42,7 @@ namespace BetterPawnControlForked
         {
             get
             {
-                return LoadedModManager.RunningMods.Any(mod => mod.Name == ANIMALTAB);
+                return LoadedModManager.RunningMods.Any(mod => string.Equals(mod.PackageId, ANIMALTAB_PACKAGE_ID, StringComparison.OrdinalIgnoreCase) || mod.Name == ANIMALTAB);
             }
         }
 
@@ -42,7 +50,7 @@ namespace BetterPawnControlForked
         {
             get
             {
-                return LoadedModManager.RunningMods.Any(mod => mod.Name.StartsWith(WORKTAB));
+                return LoadedModManager.RunningMods.Any(mod => string.Equals(mod.PackageId, WORKTAB_PACKAGE_ID, StringComparison.OrdinalIgnoreCase) || mod.Name.StartsWith(WORKTAB));
             }
         }
 
