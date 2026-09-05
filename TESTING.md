@@ -25,6 +25,12 @@ Observed on 2026-08-28:
 - XML, translation key, metadata, DLL version, and package-content validation passed.
 - Two consecutive package runs produced SHA-256 `16591E0BD855D3638D5B9E540D983F464BF2FEA31369A666339FA9B2F1AD29DC`.
 
+## In-game smoke validation
+
+- User-confirmed RimWorld Dev Quicktest: passed for the 2.9.1 change set.
+
+This smoke test does not replace the compatibility and profiling matrix below.
+
 ## Required in-game 1.6 matrix
 
 Record the RimWorld build, DLC set, mod versions, result, and relevant `Player.log` excerpt for each run.

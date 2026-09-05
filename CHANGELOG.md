@@ -10,7 +10,8 @@
 
 - Release build and local runtime deployment passed on 2026-09-05.
 - Source and runtime DLL versions are `2.9.1.0`; SHA-256 hashes match, runtime `About/Version.xml` reports `2.9.1`, required folders are present, and no runtime PDB files were deployed.
-- In-game verification remains pending.
+- User-confirmed RimWorld Dev Quicktest passed for this change set.
+- The full in-game compatibility and profiling matrix remains pending.
 
 ## 2.9.0 - 2026-08-28
 
