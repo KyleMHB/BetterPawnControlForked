@@ -5,7 +5,7 @@
 From the repository root, run:
 
 ```powershell
-.\deploy.ps1 -Version 2.9.0 -Configuration Release
+.\deploy.ps1 -Version 2.9.1 -Configuration Release
 ```
 
 The command restores pinned dependencies, builds the RimWorld 1.6 assembly, runs the dependency-free xUnit suite, parses all XML, checks English translation key uniqueness, verifies version agreement, stages only allowed package files, strips PDBs, and creates a deterministic ZIP in `artifacts/`.
@@ -14,7 +14,7 @@ Expected result:
 
 - Release build: zero warnings and zero errors
 - Core tests: all pass
-- Package: `artifacts/BetterPawnControlForked-2.9.0.zip`
+- Package: `artifacts/BetterPawnControlForked-2.9.1.zip`
 - ZIP roots: `About`, `Common`, `v1.6`, and `LoadFolders.xml`
 - Assemblies: only `v1.6/Assemblies/BetterPawnControlForked.dll`
 
@@ -57,3 +57,18 @@ Capture before and after samples for policy switching and closing a relevant paw
 | 100 | Pending | Pending | Pending | Pending | Pending |
 
 The release gate remains open until every required in-game row passes and the profiler rows contain measured values.
+
+## Targeted compiled-assembly regression
+
+After building the mod assembly, run:
+
+```powershell
+.\Tests\AssignTabOpenRegressionTests.ps1
+```
+
+Expected result:
+
+- `PASS: opening Assign does not apply a saved policy.`
+- `PASS: explicit Assign policy selection still applies saved state.`
+
+The script loads RimWorld's managed assemblies to resolve the compiled patch method. Pass `-AssemblyPath` and `-ManagedPath` when validating a non-default installation.

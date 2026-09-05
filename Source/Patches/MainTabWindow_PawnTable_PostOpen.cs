@@ -14,7 +14,6 @@ namespace BetterPawnControlForked
             
             if (windowType.Equals(typeof(MainTabWindow_Assign)))
             {
-                AssignManager.LoadState(AssignManager.links, AssignManager.Colonists().Where(PawnCompatibility.SupportsAssign).ToList(), AssignManager.GetActivePolicy());
                 AssignManager.showPaste = false;
             }
 

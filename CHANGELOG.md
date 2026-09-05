@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.9.1 - 2026-09-05
+
+### Fixed
+
+- Fixed the Assign tab reopening path so it preserves policy values changed through other interfaces until a BPC policy is explicitly selected.
+
+### Validation
+
+- Release build and local runtime deployment passed on 2026-09-05.
+- Source and runtime DLL versions are `2.9.1.0`; SHA-256 hashes match, runtime `About/Version.xml` reports `2.9.1`, required folders are present, and no runtime PDB files were deployed.
+- In-game verification remains pending.
+
 ## 2.9.0 - 2026-08-28
 
 ### Added
