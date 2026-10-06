@@ -45,6 +45,10 @@ if ($LASTEXITCODE -ne 0) { throw "Release build failed." }
 dotnet test $testProjectPath -c $Configuration --no-restore
 if ($LASTEXITCODE -ne 0) { throw "Automated tests failed." }
 
+$scheduleTestShell = (Get-Command pwsh -ErrorAction Stop).Source
+& $scheduleTestShell -NoProfile -File (Join-Path $repositoryRoot 'Tests\ScheduleTabOpenRegressionTests.ps1') -SkipCompiledChecks
+if ($LASTEXITCODE -ne 0) { throw "Schedule-opening regressions failed." }
+
 Get-ChildItem -LiteralPath $repositoryRoot -Recurse -Filter *.xml |
     Where-Object { $_.FullName -notlike "*\bin\*" -and $_.FullName -notlike "*\obj\*" -and $_.FullName -notlike "*\artifacts\*" } |
     ForEach-Object {

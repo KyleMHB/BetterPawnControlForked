@@ -19,8 +19,6 @@ namespace BetterPawnControlForked
 
             if (windowType.Equals(typeof(MainTabWindow_Schedule)))
             {
-
-                ScheduleManager.LoadState(ScheduleManager.links, ScheduleManager.Colonists().Where(PawnCompatibility.SupportsSchedule).ToList(), ScheduleManager.GetActivePolicy());
                 ScheduleManager.showPaste = false;
             }
 

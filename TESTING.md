@@ -78,3 +78,38 @@ Expected result:
 - `PASS: explicit Assign policy selection still applies saved state.`
 
 The script loads RimWorld's managed assemblies to resolve the compiled patch method. Pass `-AssemblyPath` and `-ManagedPath` when validating a non-default installation.
+
+## Schedule opening regression
+
+The release command also runs the portable Schedule regression:
+
+```powershell
+pwsh -NoProfile -File .\Tests\ScheduleTabOpenRegressionTests.ps1 -SkipCompiledChecks
+```
+
+With the local game installed, run it without `-SkipCompiledChecks` after building:
+
+```powershell
+pwsh -NoProfile -File .\Tests\ScheduleTabOpenRegressionTests.ps1
+```
+
+Observed on 2026-10-06:
+
+- Before the fix, the new regression failed because opening Schedule replaced external area B with saved area A.
+- After the fix, production opening preserves area B, all 24 live timetable assignments and the current job. It establishes the table session and resets paste UI.
+- Production close captures live areas and timetables. Selection round trips restore captured values, and explicit paste applies copied values.
+- Compiled routes retain selection, capture before showing the policy menu, close, paste, emergency application, deleted-preset fallback and arrival application.
+- Assign, Animals, Mechs, Animal Tab and Numbers opening checks passed.
+- Release validation passed with zero build warnings/errors, 20 passing core tests, all portable regressions and package checks. The local 2.9.2 package containing this unreleased fix has SHA-256 `9B6DC9ABF7F7DB658736D789FF4719B087323E3CBC2836E876E27E1B00E3FA21`. It has not been deployed or published.
+
+The script compiles the actual patch, session helper, selection-menu and manager method bodies against game doubles. Outgoing selection capture is executed through the production manager body; its UI wiring is checked in the compiled DLL. Emergency, deletion and arrival checks establish compiled call routes, not gameplay behavior. Unity UI, Harmony dispatch, optional integrations and Scribe save/reload remain unexecuted.
+
+Required in-game checks for this fix remain pending. Record the exact RimWorld build, DLC and mod versions, scenario and relevant `Player.log` evidence:
+
+- [ ] Change a colonist's area through the inspector with Schedule closed, then open Schedule and verify the area remains unchanged. Repeat with live timetable edits.
+- [ ] Close Schedule, switch presets and back, and verify areas and timetables were captured. Repeat after external edits while Schedule was closed.
+- [ ] Save and reload, reopen Schedule, and verify areas, timetables and active presets.
+- [ ] Repeat on another home map and verify the first map's state is preserved.
+- [ ] Exercise explicit selection, paste, emergency transitions, active-preset deletion fallback and arrival application.
+- [ ] With Progression: Education active, verify class timetable edits survive opening and explicit presets still synchronize classes. Repeat with other affected optional Schedule interfaces in the active mod set.
+- [ ] Confirm no new BPC errors or repeated warnings in `Player.log`.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fixed Schedule reopening so colonist areas and timetables edited through other interfaces remain in effect. Explicit preset actions still apply saved values.
+
 ## 2.9.1 - 2026-09-05
 
 ### Fixed
