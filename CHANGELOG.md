@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-23
+
+### Fixed
+
+- Restored Chinese Simplified and Japanese translations that displayed question marks, including Japanese keybinding labels.
+
 ## 2.9.1 - 2026-09-05
 
 ### Fixed
