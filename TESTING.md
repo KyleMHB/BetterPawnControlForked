@@ -27,6 +27,10 @@ Observed on 2026-08-28:
 
 ## In-game smoke validation
 
+For translation changes, run `dotnet test Tests/BetterPawnControlForked.Core.Tests.csproj --filter FullyQualifiedName~LocalizationTests` from the repository root. The six cases check strict UTF-8 decoding, XML parsing, unique keys, localized text, question-mark corruption, and the original Chinese Simplified and Japanese Auto/Rename labels. The release command also runs these cases as part of the existing test suite.
+
+The restored translations come from `voult2/BetterPawnControl` commit `7cfc247ca1981f3037a6f5693deec061ee5e4564`, with the fork's identifiers and product name retained. In RimWorld, select each language and check Default, Rename, settings, emergency tooltips, and Japanese keybinding labels for readable text.
+
 - User-confirmed RimWorld Dev Quicktest: passed for the 2.9.1 change set.
 
 This smoke test does not replace the compatibility and profiling matrix below.
