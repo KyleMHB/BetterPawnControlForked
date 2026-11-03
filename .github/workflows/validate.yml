@@ -20,12 +20,12 @@ jobs:
 
       - name: Restore, build, test, validate, and package
         shell: pwsh
-        run: ./deploy.ps1 -Version 2.9.0 -Configuration Release
+        run: ./deploy.ps1 -Version 2.9.2 -Configuration Release
 
       - name: Inspect release archive
         shell: pwsh
         run: |
-          $archive = Get-Item ./artifacts/BetterPawnControlForked-2.9.0.zip
+          $archive = Get-Item ./artifacts/BetterPawnControlForked-2.9.2.zip
           if ($archive.Length -le 0) { throw "Release archive is empty." }
           $zip = [IO.Compression.ZipFile]::OpenRead($archive.FullName)
           try {

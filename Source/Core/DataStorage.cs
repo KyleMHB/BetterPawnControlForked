@@ -37,6 +37,7 @@ namespace BetterPawnControlForked
 
             if (Scribe.mode == LoadSaveMode.Saving)
             {
+                CapturePolicyDefaults();
                 dataVersion = CurrentDataVersion;
             }
 
@@ -91,7 +92,40 @@ namespace BetterPawnControlForked
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 MigrateLoadedState();
+                RestorePolicyDefaults();
             }
+        }
+
+        private void CapturePolicyDefaults()
+        {
+            var game = Verse.Current.Game;
+            if (game == null)
+            {
+                return;
+            }
+            PolicyDefaults.Read(ref state.defaultOutfit, game.outfitDatabase.DefaultOutfit);
+            PolicyDefaults.Read(ref state.defaultDrugPolicy, game.drugPolicyDatabase.DefaultDrugPolicy);
+            PolicyDefaults.Read(ref state.assign.defaultFoodPolicy, game.foodRestrictionDatabase.DefaultFoodRestriction);
+            PolicyDefaults.Read(ref state.assign.defaultReadingPolicy, game.readingPolicyDatabase.DefaultReadingPolicy);
+        }
+
+        private void RestorePolicyDefaults()
+        {
+            // Small game components load before the world; policy cross-references are
+            // resolved by PostLoadInit. Preserve defaults saved by older BPC versions.
+            var game = Verse.Current.Game;
+            if (game == null)
+            {
+                return;
+            }
+            PolicyDefaults.Restore(ref state.defaultOutfit, game.outfitDatabase.AllOutfits,
+                game.outfitDatabase.DefaultOutfit, game.outfitDatabase.SetDefault);
+            PolicyDefaults.Restore(ref state.defaultDrugPolicy, game.drugPolicyDatabase.AllPolicies,
+                game.drugPolicyDatabase.DefaultDrugPolicy, game.drugPolicyDatabase.SetDefault);
+            PolicyDefaults.Restore(ref state.assign.defaultFoodPolicy, game.foodRestrictionDatabase.AllFoodRestrictions,
+                game.foodRestrictionDatabase.DefaultFoodRestriction, game.foodRestrictionDatabase.SetDefault);
+            PolicyDefaults.Restore(ref state.assign.defaultReadingPolicy, game.readingPolicyDatabase.AllReadingPolicies,
+                game.readingPolicyDatabase.DefaultReadingPolicy, game.readingPolicyDatabase.SetDefault);
         }
 
         private void MigrateLoadedState()

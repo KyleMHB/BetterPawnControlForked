@@ -5,16 +5,16 @@
 From the repository root, run:
 
 ```powershell
-.\deploy.ps1 -Version 2.9.1 -Configuration Release
+.\deploy.ps1 -Version 2.9.2 -Configuration Release
 ```
 
-The command restores pinned dependencies, builds the RimWorld 1.6 assembly, runs the dependency-free xUnit suite, parses all XML, checks English translation key uniqueness, verifies version agreement, stages only allowed package files, strips PDBs, and creates a deterministic ZIP in `artifacts/`.
+The command restores pinned dependencies, builds the RimWorld 1.6 assembly, runs the dependency-free xUnit suite and production-source regression scripts, parses all XML, checks English translation key uniqueness, verifies version agreement, stages only allowed package files, strips PDBs, and creates a deterministic ZIP in `artifacts/`. It requires the .NET 8 SDK and PowerShell 7.
 
 Expected result:
 
 - Release build: zero warnings and zero errors
 - Core tests: all pass
-- Package: `artifacts/BetterPawnControlForked-2.9.1.zip`
+- Package: `artifacts/BetterPawnControlForked-2.9.2.zip`
 - ZIP roots: `About`, `Common`, `v1.6`, and `LoadFolders.xml`
 - Assemblies: only `v1.6/Assemblies/BetterPawnControlForked.dll`
 
@@ -78,6 +78,44 @@ Expected result:
 - `PASS: explicit Assign policy selection still applies saved state.`
 
 The script loads RimWorld's managed assemblies to resolve the compiled patch method. Pass `-AssemblyPath` and `-ManagedPath` when validating a non-default installation.
+
+## Workshop regression validation for 2.9.2
+
+Observed on 2026-10-06:
+
+- Release build: zero warnings and zero errors.
+- xUnit: 20 passed, zero failed or skipped, including nine new policy-default tests.
+- Portable tab opening: passed for vanilla Animals, Mechs, Animal Tab and Numbers animal windows.
+- WVC: 16 production application scenarios passed, plus settings and package-detection checks.
+- Policy-default wiring: 44 checks passed.
+- Local compiled tab routes and the existing Assign regression: passed.
+- XML, translation uniqueness, version agreement and package-content checks: passed.
+- Package SHA-256: `0766B2FBF55F7B7844A89A769BC16D9B0197698252C620EE63BE6D4D0BC5698F`.
+- Local deployment on 2026-10-06: installed to `E:/Steam/steamapps/common/RimWorld/Mods/BetterPawnControlForked`; all 27 runtime files match the validated package. DLL version is `2.9.2.0`, metadata is `2.9.2`, and no PDBs are present. The previous installation was backed up under `.scratch/workshop-comments-2026-10-06/deployment-20261006-070646-ac39fdc4/previous-runtime.zip`. RimWorld was running at verification, so a restart is needed to load the new DLL. In-game validation remains pending.
+
+The packaging command runs these portable checks in separate PowerShell processes:
+
+```powershell
+pwsh -NoProfile -File .\Tests\TabStateOpenRegressionTests.ps1 -SkipCompiledChecks
+pwsh -NoProfile -File .\Tests\MechWorkModeRegressionTests.ps1
+pwsh -NoProfile -File .\Tests\PolicyDefaultsRegressionTests.ps1
+```
+
+The tab script executes the actual opening patch and session helper with game doubles. The mech script checks WVC detection, settings and the production preset application body. The default script checks the actual manager properties, database patch callbacks and capture/restore methods. The xUnit suite also checks the shared policy-default logic.
+
+With the local game installed, also run the tab script without `-SkipCompiledChecks` to check the compiled routes for explicit selection, outgoing state capture, emergency mode, paste and deleted-preset fallback:
+
+```powershell
+pwsh -NoProfile -File .\Tests\TabStateOpenRegressionTests.ps1
+```
+
+These checks do not execute Unity UI, Harmony dispatch, WVC jobs or Scribe save/reload. In-game validation for this release remains pending:
+
+- [ ] Change an animal's area outside Animals, reopen the table, then switch presets and back. Repeat with Animal Tab and Numbers.
+- [ ] Change a mech's area, mode and group through the inspector/gizmos with Mechs closed, then reopen. Verify those edits survive. Test explicit presets, emergency, paste and deletion fallback separately.
+- [ ] With WVC active, verify the enabled-by-default work-mode option skips direct mode restoration. Uncheck it and verify BPC mode control returns. Check destination-group mode behavior and save/reload.
+- [ ] Change colonist apparel, food, drug and reading defaults through BPC and vanilla Make default. Check agreement, newly joined pawns, save/reload and deletion fallback. Browsing a policy must not change the default.
+- [ ] Confirm colonist default changes preserve existing prisoner, slave and animal defaults.
 
 ## Schedule opening regression
 

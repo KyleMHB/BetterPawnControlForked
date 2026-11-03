@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "2.9.1",
+    [string]$Version = "2.9.2",
     [string]$Configuration = "Release"
 )
 
@@ -48,6 +48,14 @@ if ($LASTEXITCODE -ne 0) { throw "Automated tests failed." }
 $scheduleTestShell = (Get-Command pwsh -ErrorAction Stop).Source
 & $scheduleTestShell -NoProfile -File (Join-Path $repositoryRoot 'Tests\ScheduleTabOpenRegressionTests.ps1') -SkipCompiledChecks
 if ($LASTEXITCODE -ne 0) { throw "Schedule-opening regressions failed." }
+
+$testShell = (Get-Command pwsh -ErrorAction Stop).Source
+& $testShell -NoProfile -File (Join-Path $repositoryRoot 'Tests\TabStateOpenRegressionTests.ps1') -SkipCompiledChecks
+if ($LASTEXITCODE -ne 0) { throw "Tab-opening regressions failed." }
+& $testShell -NoProfile -File (Join-Path $repositoryRoot 'Tests\MechWorkModeRegressionTests.ps1')
+if ($LASTEXITCODE -ne 0) { throw "Mech work-mode regressions failed." }
+& $testShell -NoProfile -File (Join-Path $repositoryRoot 'Tests\PolicyDefaultsRegressionTests.ps1')
+if ($LASTEXITCODE -ne 0) { throw "Policy-default wiring regressions failed." }
 
 Get-ChildItem -LiteralPath $repositoryRoot -Recurse -Filter *.xml |
     Where-Object { $_.FullName -notlike "*\bin\*" -and $_.FullName -notlike "*\obj\*" -and $_.FullName -notlike "*\artifacts\*" } |
@@ -148,5 +156,7 @@ finally {
     $inspection.Dispose()
 }
 
-Remove-Item -Recurse -Force -LiteralPath ([IO.Path]::GetFullPath((Join-Path $artifactsRoot "staging")))
+$stagingParent = [IO.Path]::GetFullPath((Join-Path $artifactsRoot "staging"))
+Assert-UnderRepository $stagingParent $artifactsRoot
+Remove-Item -Recurse -Force -LiteralPath $stagingParent
 Write-Host "Created $zipPath"

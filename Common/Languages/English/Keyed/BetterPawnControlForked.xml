@@ -84,5 +84,7 @@
 	<BPC.DisableBPCWorkTabInnerPrioritiesSetting>Disable BPC integration with WorkTab's mod inner (or extended) priorities and keep 'normal' priorities?</BPC.DisableBPCWorkTabInnerPrioritiesSetting>
 	<BPC.DisableBPCWorkTabInnerPrioritiesTooltip>This will allow to keep using BPC with WorkTab but without saving the inner priorities.</BPC.DisableBPCWorkTabInnerPrioritiesTooltip>
 
+	<BPC.DisableMechWorkModesWithWVCSetting>Let WVC control mech work modes</BPC.DisableMechWorkModesWithWVCSetting>
+	<BPC.DisableMechWorkModesWithWVCTooltip>With WVC - More Mechanoids Work Modes active, BPC skips direct work mode restoration during preset switches, paste and emergency changes. Saved work modes remain stored. BPC still assigns control groups and allowed areas: assigning a mech to a different group can change its mode to that group's mode. Uncheck to restore saved work modes with BPC.</BPC.DisableMechWorkModesWithWVCTooltip>
 </LanguageData>
 

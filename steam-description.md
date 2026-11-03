@@ -1,7 +1,7 @@
 [h1]Description[/h1]
 Better Pawn Control Forked adds named presets for colony policies. Save different assignments, schedules, work priorities, areas, animal settings, mech settings, and supported loadouts, then switch between them from RimWorld's management tabs.
 
-This maintained fork targets RimWorld 1.6 and adds defensive handling for heavily modded colonies. Version 2.9.1 also keeps assignment changes made through Health, Numbers, imHUD, and similar interfaces until you explicitly select a BPC preset.
+This maintained fork supports RimWorld 1.6 and 1.7 and adds defensive handling for heavily modded colonies. Version 2.9.2 preserves external policy changes when opening Assign, Animals and Mechs, synchronizes BPC and vanilla colonist defaults, and adds an option to leave mech work modes to WVC - Work Modes.
 
 [b]Use the original Better Pawn Control or this fork, not both.[/b]
 
@@ -26,14 +26,14 @@ This maintained fork targets RimWorld 1.6 and adds defensive handling for heavil
 [*]Select a BPC preset whenever you want to apply its saved values.
 [/list]
 
-Opening the Assign tab alone does not reapply saved values. Preset application happens when you select a BPC preset.
+Opening Assign, Animals or Mechs alone does not reapply saved values. Explicit preset selection and emergency mode still apply saved presets.
 
 [h1]Settings and Configuration[/h1]
 Use RimWorld's mod settings for defaults, emergency behavior, and optional integrations. Use the BPC cog menus in the supported management tabs to manage presets.
 
 [h1]Requirements and Dependencies[/h1]
 [list]
-[*]RimWorld 1.6.
+[*]RimWorld 1.6 and 1.7.
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077]Harmony[/url].
 [/list]
 
@@ -56,12 +56,9 @@ Original Better Pawn Control by VouLT. This fork is maintained by KyleMHB. Origi
 
 Progression: Education support is based on Machado's BetterPawnControl ProgressionEducation Patch.
 
-[h1]License and Forking Policy[/h1]
+[h1]License[/h1]
 This fork inherits the original Better Pawn Control MIT license.
 
-If your fork primarily consists of bug fixes or feature additions that align with the core vision of this mod, I reserve the right to request that your changes be submitted as a Pull Request to my existing codebase rather than being published as a completely separate standalone release.
-
-This is a project request, not an additional restriction on the MIT license.
 
 [h1]Links[/h1]
 Support me on Ko-fi. This does not imply endorsement by the original authors.
@@ -73,4 +70,9 @@ Support me on Ko-fi. This does not imply endorsement by the original authors.
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369]Original Better Pawn Control on Steam Workshop[/url]
 [*][url=https://github.com/voult2/BetterPawnControl]Original source repository[/url]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3673605975]BetterPawnControl ProgressionEducation Patch[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3714050938]Cargo Containers Expanded[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3710884766]Everything Has Quality Reforked[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3724312502]Gear Up and Go Reforked[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3724311713]Outfit Stands Plus Forked[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3712317437]Stats Forked[/url]
 [/list]

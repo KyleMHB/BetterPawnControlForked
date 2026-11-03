@@ -31,14 +31,10 @@ namespace BetterPawnControlForked
                 }
             }
 
-            if (windowType.Equals(typeof(MainTabWindow_Animals)) || windowType.FullName.Equals(Widget_ModsAvailable.ANIMALTAB_MAINTAB) || windowType.FullName.Equals(Widget_ModsAvailable.NUMBERS_DEFNAME))
-            {
-                AnimalManager.LoadState(AnimalManager.links, AnimalManager.Animals().ToList(), AnimalManager.GetActivePolicy());
-            }
-
+            // Animals and Mechs preserve changes made through other UIs when opened.
+            // Explicit selection and dirty-policy fallback still apply their presets.
             if (windowType.Equals(typeof(MainTabWindow_Mechs)))
             {
-                MechManager.LoadState(MechManager.links, MechManager.Mechs().ToList(), MechManager.GetActivePolicy());
                 MechManager.showPaste = false;
             }
             

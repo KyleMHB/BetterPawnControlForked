@@ -115,6 +115,7 @@ namespace BetterPawnControlForked
             mapLinks = links.FindAll(x => x != null && x.mapId == currentMap);
             //get all links from the selected zone
             zoneLinks = mapLinks.FindAll(x => x != null &&  x.zone == policy.id);
+            bool restoreWorkModes = !Widget_ModsAvailable.DisableBPCMechWorkModes;
 
             foreach (Pawn p in pawns)
             {
@@ -138,7 +139,10 @@ namespace BetterPawnControlForked
                                     group.Assign(p);
                                 }
                             }
-                            p.GetMechControlGroup().SetWorkMode(l.workmode);  
+                            if (restoreWorkModes && l.workmode != null)
+                            {
+                                p.GetMechControlGroup().SetWorkMode(l.workmode);
+                            }
                             p.playerSettings.AreaRestrictionInPawnCurrentMap = l.area;
                         }
                     }

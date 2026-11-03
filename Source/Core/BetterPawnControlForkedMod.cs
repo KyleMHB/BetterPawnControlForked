@@ -20,6 +20,11 @@ namespace BetterPawnControlForked
             listingStandard.CheckboxLabeled("BPC.AutomaticPawnsInterruptSetting".Translate(), ref Settings.automaticPawnsInterrupt);
             listingStandard.CheckboxLabeled("BPC.SaveInventoryStock".Translate(), ref Settings.saveInventoryStock);
 
+            if (Widget_ModsAvailable.WVCWorkModesAvailable)
+            {
+                listingStandard.CheckboxLabeled("BPC.DisableMechWorkModesWithWVCSetting".Translate(), ref Settings.disableMechWorkModesWithWVC, "BPC.DisableMechWorkModesWithWVCTooltip".Translate());
+            }
+
             if (Widget_ModsAvailable.WorkTabAvailable)
             {
                 listingStandard.CheckboxLabeled("BPC.DisableBPCOnWorkTabSetting".Translate(), ref Settings.disableBPCOnWorkTab, "BPC.DisableBPCOnWorkTabTooltip".Translate());

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BetterPawnControlForked.Helpers;
+using BetterPawnControlForked.CoreLogic;
 using RimWorld;
 using Verse;
 using static BetterPawnControlForked.BetterPawnControlForkedMod;
@@ -16,57 +17,23 @@ namespace BetterPawnControlForked
         internal static ApparelPolicy _defaultOutfit { get => DataStorage.State.defaultOutfit; set => DataStorage.State.defaultOutfit = value; }
         internal static ApparelPolicy DefaultOutfit
         {
-            get
-            {
-                if (_defaultOutfit == null)
-                {
-
-                    _defaultOutfit = Current.Game.outfitDatabase.DefaultOutfit();
-                }
-                return _defaultOutfit;
-            }
-
-            set
-            {
-                _defaultOutfit = value;
-            }
+            get => PolicyDefaults.Read(ref DataStorage.State.defaultOutfit, Current.Game.outfitDatabase.DefaultOutfit);
+            set => PolicyDefaults.Set(ref DataStorage.State.defaultOutfit, value, Current.Game.outfitDatabase.AllOutfits, Current.Game.outfitDatabase.SetDefault);
         }
 
         internal static DrugPolicy _defaultDrugPolicy { get => DataStorage.State.defaultDrugPolicy; set => DataStorage.State.defaultDrugPolicy = value; }
         internal static DrugPolicy DefaultDrugPolicy
         {
-            get
-            {
-                if (_defaultDrugPolicy == null)
-                {
-                    _defaultDrugPolicy = Current.Game.drugPolicyDatabase.DefaultDrugPolicy();
-                }
-                return _defaultDrugPolicy;
-            }
-
-            set
-            {
-                _defaultDrugPolicy = value;
-            }
+            get => PolicyDefaults.Read(ref DataStorage.State.defaultDrugPolicy, Current.Game.drugPolicyDatabase.DefaultDrugPolicy);
+            set => PolicyDefaults.Set(ref DataStorage.State.defaultDrugPolicy, value, Current.Game.drugPolicyDatabase.AllPolicies, Current.Game.drugPolicyDatabase.SetDefault);
         }
 
 
         internal static FoodPolicy _defaultPrisonerFoodPolicy { get => DataStorage.State.defaultPrisonerFoodPolicy; set => DataStorage.State.defaultPrisonerFoodPolicy = value; }
         internal static FoodPolicy DefaultPrisonerFoodPolicy
         {
-            get
-            {
-                if (_defaultPrisonerFoodPolicy == null)
-                {
-                    _defaultPrisonerFoodPolicy = Current.Game.foodRestrictionDatabase.DefaultFoodRestriction();
-                }
-                return _defaultPrisonerFoodPolicy;
-            }
-
-            set
-            {
-                _defaultPrisonerFoodPolicy = value;
-            }
+            get => PolicyDefaults.ReadSeparate(ref DataStorage.State.defaultPrisonerFoodPolicy, Current.Game.foodRestrictionDatabase.AllFoodRestrictions, Current.Game.foodRestrictionDatabase.DefaultFoodRestriction);
+            set => DataStorage.State.defaultPrisonerFoodPolicy = value;
         }
 
         internal static MedicalCareCategory DefaultPrisonerMedicinePolicy
@@ -98,74 +65,29 @@ namespace BetterPawnControlForked
         internal static ApparelPolicy _defaultSlaveOutfit { get => DataStorage.State.defaultSlaveOutfit; set => DataStorage.State.defaultSlaveOutfit = value; }
         internal static ApparelPolicy DefaultSlaveOutfit
         {
-            get
-            {
-                if (_defaultSlaveOutfit == null)
-                {
-
-                    _defaultSlaveOutfit = Current.Game.outfitDatabase.DefaultOutfit();
-                }
-                return _defaultSlaveOutfit;
-            }
-
-            set
-            {
-                _defaultSlaveOutfit = value;
-            }
+            get => PolicyDefaults.ReadSeparate(ref DataStorage.State.defaultSlaveOutfit, Current.Game.outfitDatabase.AllOutfits, Current.Game.outfitDatabase.DefaultOutfit);
+            set => DataStorage.State.defaultSlaveOutfit = value;
         }
 
         internal static FoodPolicy _defaultSlaveFoodPolicy { get => DataStorage.State.defaultSlaveFoodPolicy; set => DataStorage.State.defaultSlaveFoodPolicy = value; }
         internal static FoodPolicy DefaultSlaveFoodPolicy
         {
-            get
-            {
-                if (_defaultSlaveFoodPolicy == null)
-                {
-                    _defaultSlaveFoodPolicy = DefaultFoodPolicy;
-                }
-                return _defaultSlaveFoodPolicy;
-            }
-
-            set
-            {
-                _defaultSlaveFoodPolicy = value;
-            }
+            get => PolicyDefaults.ReadSeparate(ref DataStorage.State.defaultSlaveFoodPolicy, Current.Game.foodRestrictionDatabase.AllFoodRestrictions, Current.Game.foodRestrictionDatabase.DefaultFoodRestriction);
+            set => DataStorage.State.defaultSlaveFoodPolicy = value;
         }
 
         internal static DrugPolicy _defaultSlaveDrugPolicy { get => DataStorage.State.defaultSlaveDrugPolicy; set => DataStorage.State.defaultSlaveDrugPolicy = value; }
         internal static DrugPolicy DefaultSlaveDrugPolicy
         {
-            get
-            {
-                if (_defaultSlaveDrugPolicy == null)
-                {
-                    _defaultSlaveDrugPolicy = Current.Game.drugPolicyDatabase.DefaultDrugPolicy();
-                }
-                return _defaultSlaveDrugPolicy;
-            }
-
-            set
-            {
-                _defaultSlaveDrugPolicy = value;
-            }
+            get => PolicyDefaults.ReadSeparate(ref DataStorage.State.defaultSlaveDrugPolicy, Current.Game.drugPolicyDatabase.AllPolicies, Current.Game.drugPolicyDatabase.DefaultDrugPolicy);
+            set => DataStorage.State.defaultSlaveDrugPolicy = value;
         }
 
         internal static ReadingPolicy _defaultSlaveReadingPolicy { get => DataStorage.State.defaultSlaveReadingPolicy; set => DataStorage.State.defaultSlaveReadingPolicy = value; }
         internal static ReadingPolicy DefaultSlaveReadingPolicy
         {
-            get
-            {
-                if (_defaultSlaveReadingPolicy == null)
-                {
-                    _defaultSlaveReadingPolicy = Current.Game.readingPolicyDatabase.DefaultReadingPolicy();
-                }
-                return _defaultSlaveReadingPolicy;
-            }
-
-            set
-            {
-                _defaultSlaveReadingPolicy = value;
-            }
+            get => PolicyDefaults.ReadSeparate(ref DataStorage.State.defaultSlaveReadingPolicy, Current.Game.readingPolicyDatabase.AllReadingPolicies, Current.Game.readingPolicyDatabase.DefaultReadingPolicy);
+            set => DataStorage.State.defaultSlaveReadingPolicy = value;
         }
 
         internal static void DeletePolicy(Policy policy)

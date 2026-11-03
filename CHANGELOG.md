@@ -1,10 +1,35 @@
 # Changelog
 
+## 2026-10-14
+
+### Changed
+
+- Added RimWorld 1.7 compatibility while retaining 1.6 support.
+
 ## Unreleased
 
 ### Fixed
 
 - Fixed Schedule reopening so colonist areas and timetables edited through other interfaces remain in effect. Explicit preset actions still apply saved values.
+
+## 2.9.2 - 2026-10-06
+
+### Fixed
+
+- Opening Animals or Mechs preserves area, work-mode and control-group changes made through other interfaces, including mech group gizmos.
+- BPC and vanilla colonist apparel, food, drug and reading defaults now stay synchronized. Saved BPC defaults remain supported, and deleted default references fall back to valid policies.
+- Prisoner, slave and animal defaults remain separate from colonist defaults.
+- Mech presets skip missing saved work-mode definitions.
+
+### Added
+
+- With WVC - Work Modes active, BPC skips direct mech work-mode restoration by default. The mod settings option allows BPC to restore modes again; group and area presets remain active.
+- Added production-source regression checks for tab opening, WVC ownership and default-policy wiring to release validation.
+
+### Validation
+
+- Automated validation results are recorded in `TESTING.md` and the Workshop implementation tickets.
+- In-game UI, WVC gameplay and save/reload validation for this release remain pending.
 
 ## 2.9.1 - 2026-09-05
 

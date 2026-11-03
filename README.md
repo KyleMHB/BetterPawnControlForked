@@ -2,7 +2,7 @@
 
 Better Pawn Control Forked adds named presets for RimWorld colony policies. Save different assignments, schedules, work priorities, areas, animal settings, mech settings, and supported loadouts, then switch the colony between them from the relevant management tab.
 
-This maintained fork targets RimWorld 1.6 and adds defensive handling for heavily modded colonies, optional integrations, save migration, and map transfers.
+This maintained fork supports RimWorld 1.6 and 1.7 and adds defensive handling for heavily modded colonies, optional integrations, save migration, and map transfers.
 
 ## Features
 
@@ -38,7 +38,7 @@ This maintained fork targets RimWorld 1.6 and adds defensive handling for heavil
 4. Change RimWorld's normal controls while that preset is active. BPC records those changes when you leave the window or switch presets.
 5. Select a BPC preset when you want to apply its saved values.
 
-Opening the Assign tab does not reapply a saved preset. This lets changes made through Health, Numbers, imHUD, and similar interfaces remain in place until you explicitly select a BPC preset.
+Opening the Assign, Animals or Mechs tab does not reapply a saved preset. Changes made through Health, Numbers, imHUD, the inspector or mech group gizmos remain in place until a preset is applied.
 
 ## Settings and configuration
 
@@ -49,13 +49,14 @@ You can configure:
 - default policies for new colonists, prisoners, and slaves;
 - the presets used by emergency mode;
 - Work Tab integration;
+- whether BPC restores mech work modes when WVC - Work Modes is active;
 - optional animal, mech, robot, and loadout integrations;
 - Progression: Education schedule syncing; and
 - Outfit Stands Plus Forked apparel handling.
 
 ## Compatibility and save migration
 
-- Requires RimWorld 1.6 and Harmony.
+- Requires RimWorld 1.6 or 1.7 and Harmony.
 - The original Better Pawn Control and this fork are incompatible. The fork disables its Harmony patches if both are forced active.
 - Optional integrations include Work Tab, Combat Extended, Compositable Loadouts, FSF Complex Jobs, Progression: Education, Defensive Positions Forked, and Outfit Stands Plus Forked.
 - Version 2.9 and later migrate original Better Pawn Control and pre-2.9 fork data to schema 2.
@@ -63,17 +64,17 @@ You can configure:
 
 ## Building from source
 
-Install the .NET 8 SDK, then run this command from the repository root:
+Install the .NET 8 SDK and PowerShell 7, then run this command from the repository root:
 
 ```powershell
-.\deploy.ps1 -Version 2.9.1 -Configuration Release
+.\deploy.ps1 -Version 2.9.2 -Configuration Release
 ```
 
-The script restores pinned references, builds the RimWorld 1.6 assembly, runs the automated tests, validates the package, and creates `artifacts/BetterPawnControlForked-2.9.1.zip`. It does not install or publish the package.
+The script restores pinned references, builds the RimWorld 1.6 assembly, runs the automated tests, validates the package, and creates `artifacts/BetterPawnControlForked-2.9.2.zip`. It does not install or publish the package.
 
 ## Testing and validation
 
-The packaging command runs the 11 core tests. Run the compiled Assign-tab regression separately:
+The packaging command runs the core tests and portable regressions for tab opening, WVC work-mode ownership and policy defaults. Run the compiled Assign-tab regression separately:
 
 ```powershell
 .\Tests\AssignTabOpenRegressionTests.ps1
@@ -105,11 +106,15 @@ Support me on Ko-fi. This does not imply endorsement by the original authors.
 - [Original Better Pawn Control on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1541460369)
 - [Original source repository](https://github.com/voult2/BetterPawnControl)
 
-## Contributing and Forking Policy
+- [Cargo Containers Expanded](https://steamcommunity.com/sharedfiles/filedetails/?id=3714050938)
+- [Everything Has Quality Reforked](https://steamcommunity.com/sharedfiles/filedetails/?id=3710884766)
+- [Gear Up and Go Reforked](https://steamcommunity.com/sharedfiles/filedetails/?id=3724312502)
+- [Outfit Stands Plus Forked](https://steamcommunity.com/sharedfiles/filedetails/?id=3724311713)
+- [Stats Forked](https://steamcommunity.com/sharedfiles/filedetails/?id=3712317437)
+
+## Contributing
 
 > Contributions, issues, and feature requests are welcome.
->
-> **Forking Policy:** If your fork primarily consists of bug fixes or feature additions that align with the core vision of this project, I reserve the right to request that your changes be submitted as a Pull Request to this existing codebase rather than being published as a completely separate standalone release, package, listing, or distribution.
 
 ## License
 

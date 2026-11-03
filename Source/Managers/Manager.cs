@@ -185,38 +185,36 @@ namespace BetterPawnControlForked
 		internal static FoodPolicy _defaultFoodPolicy { get => Feature.defaultFoodPolicy; set => Feature.defaultFoodPolicy = value; }
 		internal static FoodPolicy DefaultFoodPolicy
 		{
-			get
-			{
-				if (_defaultFoodPolicy == null)
-				{
-					_defaultFoodPolicy = Current.Game.foodRestrictionDatabase.DefaultFoodRestriction();
-				}
-				return _defaultFoodPolicy;
-			}
-
-			set
-			{
-				_defaultFoodPolicy = value;
-			}
-		}
+            get => typeof(T) == typeof(AssignLink)
+                ? PolicyDefaults.Read(ref Feature.defaultFoodPolicy, Current.Game.foodRestrictionDatabase.DefaultFoodRestriction)
+                : PolicyDefaults.ReadSeparate(ref Feature.defaultFoodPolicy, Current.Game.foodRestrictionDatabase.AllFoodRestrictions,
+                    Current.Game.foodRestrictionDatabase.DefaultFoodRestriction);
+            set
+            {
+                if (typeof(T) == typeof(AssignLink))
+                    PolicyDefaults.Set(ref Feature.defaultFoodPolicy, value, Current.Game.foodRestrictionDatabase.AllFoodRestrictions,
+                        Current.Game.foodRestrictionDatabase.SetDefault);
+                else
+                    Feature.defaultFoodPolicy = value;
+            }
+        }
 
 		internal static ReadingPolicy _defaultReadingPolicy { get => Feature.defaultReadingPolicy; set => Feature.defaultReadingPolicy = value; }
 		internal static ReadingPolicy DefaultReadingPolicy
 		{
-			get
-			{
-				if (_defaultReadingPolicy == null)
-				{
-					_defaultReadingPolicy = Current.Game.readingPolicyDatabase.DefaultReadingPolicy();
-				}
-				return _defaultReadingPolicy;
-			}
-
-			set
-			{
-				_defaultReadingPolicy = value;
-			}
-		}
+            get => typeof(T) == typeof(AssignLink)
+                ? PolicyDefaults.Read(ref Feature.defaultReadingPolicy, Current.Game.readingPolicyDatabase.DefaultReadingPolicy)
+                : PolicyDefaults.ReadSeparate(ref Feature.defaultReadingPolicy, Current.Game.readingPolicyDatabase.AllReadingPolicies,
+                    Current.Game.readingPolicyDatabase.DefaultReadingPolicy);
+            set
+            {
+                if (typeof(T) == typeof(AssignLink))
+                    PolicyDefaults.Set(ref Feature.defaultReadingPolicy, value, Current.Game.readingPolicyDatabase.AllReadingPolicies,
+                        Current.Game.readingPolicyDatabase.SetDefault);
+                else
+                    Feature.defaultReadingPolicy = value;
+            }
+        }
 
         internal static MedicalCareCategory DefaultMedsPolicy
         {

@@ -9,6 +9,8 @@
   <ItemGroup>
     <Compile Include="..\Source\CoreLogic\*.cs" Link="CoreLogic\%(Filename)%(Extension)" />
     <None Include="Fixtures\*.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Common\Languages\ChineseSimplified\**\*.xml" Link="Languages\ChineseSimplified\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Common\Languages\Japanese\**\*.xml" Link="Languages\Japanese\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
