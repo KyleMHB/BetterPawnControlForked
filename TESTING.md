@@ -155,3 +155,38 @@ Required in-game checks for this fix remain pending. Record the exact RimWorld b
 - [ ] Exercise explicit selection, paste, emergency transitions, active-preset deletion fallback and arrival application.
 - [ ] With Progression: Education active, verify class timetable edits survive opening and explicit presets still synchronize classes. Repeat with other affected optional Schedule interfaces in the active mod set.
 - [ ] Confirm no new BPC errors or repeated warnings in `Player.log`.
+
+## In-game developer tests
+
+`DevTests/` uses the shared runner in the sibling `RimWorldDevTests` checkout. The game runs in an isolated save-data folder with the `default` mod set from `DevTests/devtests.json` (Harmony, Core, this mod), so the player's mod list, settings and saves are not touched.
+
+Batch `bpc-assign` covers the Assign tab's policy flow. The active-policy button saves the current state, and the menu option loads the selected policy:
+
+- **`bpc.loaded`:** the `DataStorage` world component, the Harmony patches and default policy 0 are present.
+- **`bpc.switch-new`:** selecting a new policy keeps the colonists' current settings and makes it active.
+- **`bpc.switch-back`/`bpc.switch-again`:** each policy restores its own apparel policy, food policy, hostility response and medical care for two colonists.
+- **`bpc.reload`:** policy B, its links for both policies and the active selection survive a save and reload.
+- **`bpc.reload-switch`:** after reload, selecting policy 0 still restores its saved policies.
+- **`bpc.delete-fallback`:** deleting the active policy falls back to policy 0 and removes its links.
+
+The cases are mechanical. They call the managers' internal methods through `DevTests/Assign/Bpc.cs` (reflection, so the release DLL needs no `InternalsVisibleTo`). They do not click the tab, button or menu.
+
+```powershell
+dotnet build DevTests/BetterPawnControlForked.DevTests.csproj -c Release
+python tools/bpc_test.py run bpc-assign --seed 1
+python tools/bpc_test.py close-session
+python tools/bpc_test.py release-check
+```
+
+The installed mod must match the working tree's `About`, `Common`, `v1.6` and `LoadFolders.xml`.
+
+### 2026-11-09 run
+
+- **Environment:** RimWorld 1.7.5000 rev1275, seed 1, mod set `default` (3 mods). The working tree was `master` (`d0d5291`) plus the harness files, with the Release DLL rebuilt (0 warnings).
+- **Deployment:** the previous 2026-10-06 installation was backed up to `.scratch/devtests-harness/previous-runtime-20261109.zip`. The runtime folders were then copied from the working tree. `deploy.ps1` stopped before packaging because PowerShell 7 (`pwsh`) is not installed, after its restore, Release build and xUnit steps.
+- **Result, run `20261109-183139-bpc-assign-s1`:** 7 of 7 passed. Switching restored outfit A/food A/Attack/NoMeds and outfit B/food B/Flee/Best for both colonists. Reload kept the active policy (id 1) and 2 links per policy. Deletion fell back to policy 0 with no links left. `release-check` passed.
+- **Earlier attempts:**
+  - The first attempt crashed in the launcher, which installed developer DLLs into `<mod>/Assemblies`.
+  - Run `20261109-183059-bpc-assign-s1` passed but failed the isolation check, because the runtime manifest hashed `v1.6` as the mod root.
+  - Both shared-harness assumptions were fixed in `RimWorldDevTests` before the passing run.
+- **Not covered:** the other tabs (Work, Schedule, Animals, Mechs, Weapons), emergency mode, copy/paste, optional integrations, multiple maps, the actual UI clicks, and the full mod list.

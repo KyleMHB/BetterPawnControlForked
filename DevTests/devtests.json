@@ -1,0 +1,14 @@
+{
+  "name": "Better Pawn Control Forked",
+  "argPrefix": "bpc",
+  "modDir": "E:/Steam/steamapps/common/RimWorld/Mods/BetterPawnControlForked",
+  "productionDll": "v1.6/Assemblies/BetterPawnControlForked.dll",
+  "devBuild": "work/devtests/BetterPawnControlForked.DevTests.dll",
+  "devProject": "DevTests/BetterPawnControlForked.DevTests.csproj",
+  "evidenceFolder": "BetterPawnControlForkedTests",
+  "runtimeFolders": ["About", "Common", "v1.6"],
+  "runtimeFiles": ["LoadFolders.xml"],
+  "modSets": {
+    "default": ["brrainz.harmony", "ludeon.rimworld", "kylemhb.betterpawncontrolforked"]
+  }
+}
