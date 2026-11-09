@@ -13,6 +13,6 @@ public sealed class ModHarness : HarnessSettings
     public override string EvidenceFolder => "BetterPawnControlForkedTests";
     public override string[] RuntimeFolders => new[] { "About", "Common", "v1.6" };
     public override string[] RuntimeFiles => new[] { "LoadFolders.xml" };
-    public override IEnumerable<Batch> CreateBatches() => new Batch[] { new AssignBatch() };
-    public override IEnumerable<string> RunAll => new[] { "bpc-assign" };
+    public override IEnumerable<Batch> CreateBatches() => new Batch[] { new AssignBatch(), new WorkScheduleBatch() };
+    public override IEnumerable<string> RunAll => new[] { "bpc-assign", "bpc-work-schedule" };
 }

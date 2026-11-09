@@ -189,4 +189,23 @@ The installed mod must match the working tree's `About`, `Common`, `v1.6` and `L
   - The first attempt crashed in the launcher, which installed developer DLLs into `<mod>/Assemblies`.
   - Run `20261109-183059-bpc-assign-s1` passed but failed the isolation check, because the runtime manifest hashed `v1.6` as the mod root.
   - Both shared-harness assumptions were fixed in `RimWorldDevTests` before the passing run.
-- **Not covered:** the other tabs (Work, Schedule, Animals, Mechs, Weapons), emergency mode, copy/paste, optional integrations, multiple maps, the actual UI clicks, and the full mod list.
+- **Not covered at that point:** the other tabs (Work, Schedule, Animals, Mechs, Weapons), emergency mode (see `bpc-work-schedule` below), copy/paste, optional integrations, multiple maps, the actual UI clicks, and the full mod list.
+
+### Batch `bpc-work-schedule`
+
+Same `default` mod set. It covers the Work and Schedule tabs and emergency mode:
+
+- **`bpc.work-switch`:** each Work preset restores its own Hauling priority and the priority of a second work type both colonists can do (manual priorities on).
+- **`bpc.schedule-switch`:** each Schedule preset restores its own allowed area and 24-hour timetable.
+- **`bpc.emergency-on`:** with emergency level 1 set to preset B in Work and Schedule, the toggle applies both presets and their saved state.
+- **`bpc.emergency-reload`:** emergency mode, the emergency presets, the active presets and the colonists' state survive a save and reload.
+- **`bpc.emergency-off`:** turning emergency mode off restores preset 0 and its saved state in both tabs.
+
+The cases are mechanical. They call the tabs' save-then-load flow, set emergency presets as the Manage Policies menu does, and invoke the toggle method that the button and keybind call (`DevTests/Tabs/BpcTab.cs`). They don't click a tab, button, menu or keybind.
+
+```powershell
+python tools/bpc_test.py run bpc-work-schedule --seed 1
+```
+
+- **2026-11-09, run `20261109-192905-bpc-work-schedule-s1`:** 5 of 5 passed. RimWorld 1.7.5000 rev1275, seed 1; installed mod unchanged from the `bpc-assign` run. The second work type was Cleaning. Preset 0 restored Hauling 1/Cleaning 3, area A and an all-Anything day; preset B restored Hauling 4/Cleaning 1, area B and 8 Sleep hours followed by Work.
+- **Not covered:** emergency presets for Assign, Animals, Mechs and other tabs. Also not covered: changes made since BPC last saved. The emergency toggle records which presets were active but doesn't save the colonists' current state first, so turning it off brings back each preset's last saved state. Whether that should change is a design question. Also not covered: Schedule opening and closing with external edits, paste, deleted emergency presets, multiple maps and optional integrations.
